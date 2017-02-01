@@ -85,7 +85,7 @@ namespace TinyRoar.Framework
             //GroveManagement.Instance.ForceSaving();
 
             // Analytics
-            Analytics.Instance.UserEvent("EndedAfterSeconds", Time.time.ToString());
+            //Analytics.Instance.UserEvent("EndedAfterSeconds", Time.time.ToString());
 
         }
 

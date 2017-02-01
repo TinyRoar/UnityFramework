@@ -29,7 +29,7 @@ namespace TinyRoar.Framework
 
         private void OnChange()
         {
-            IBaseCam[] comps = this.GetComponents<IBaseCam>();
+            ICam[] comps = this.GetComponents<ICam>();
             foreach (var comp in comps)
             {
                 if (Enabled)
