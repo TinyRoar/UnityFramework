@@ -4,92 +4,90 @@ using System.Collections.Generic;
 using TinyRoar.Framework;
 using System.Threading;
 
-public class InitManager : MonoSingleton<InitManager>
+namespace TinyRoar.Framework
 {
-    [SerializeField]
-    private SaveMethod SaveMethod = SaveMethod.BinaryCrypt;
-
-    [SerializeField]
-    private int FPS = 30;
-
-    [SerializeField]
-    private GameplayStatus DefaultGameplayStatus = GameplayStatus.None;
-
-    [SerializeField]
-    private GameEnvironment DefaultEnvironment;
-
-    [SerializeField]
-    public List<LayerEntry> LayerEntries;
-
-    public bool Debug = false;
-
-    public bool UseAnalytics = false;
-
-    public bool CloseAtEsc = false;
-
-    public static Thread MainThread = null;
-
-
-
-    public override void Awake()
+    public class InitManager : MonoSingleton<InitManager>
     {
-        base.Awake();
+        [SerializeField] private SaveMethod SaveMethod = SaveMethod.BinaryCrypt;
 
-        // set encrytion method
-        if (SaveMethod != SaveMethod.None)
+        [SerializeField] private int FPS = 30;
+
+        [SerializeField] private GameplayStatus DefaultGameplayStatus = GameplayStatus.None;
+
+        [SerializeField] private GameEnvironment DefaultEnvironment;
+
+        [SerializeField] public List<LayerEntry> LayerEntries;
+
+        public bool Debug = false;
+
+        public bool UseAnalytics = false;
+
+        public bool CloseAtEsc = false;
+
+        public static Thread MainThread = null;
+
+
+
+        public override void Awake()
         {
-            GameConfig.Instance.UseSaveMethod = SaveMethod;
+            base.Awake();
+
+            // set encrytion method
+            if (SaveMethod != SaveMethod.None)
+            {
+                GameConfig.Instance.UseSaveMethod = SaveMethod;
+            }
+
+            MainThread = System.Threading.Thread.CurrentThread;
+
         }
 
-        MainThread = System.Threading.Thread.CurrentThread;
-
-    }
-
-    void Start ()
-    {
-        UIManager.Instance.Init();
-
-        // set FPS
-        Application.targetFrameRate = FPS;
-
-        // execute next frame
-        Updater.Instance.ExecuteNextFrame(delegate 
+        void Start()
         {
-            Events.GameplayStatus = DefaultGameplayStatus;
-            UIManager.Instance.Switch(DefaultEnvironment, 0);
+            UIManager.Instance.Init();
 
-            int count = LayerEntries.Count;
-            for (var i = 0; i < count; i++)
+            // set FPS
+            Application.targetFrameRate = FPS;
+
+            // execute next frame
+            Updater.Instance.ExecuteNextFrame(delegate
             {
-                LayerEntry layerEntry = LayerEntries[i];
+                Events.GameplayStatus = DefaultGameplayStatus;
+                UIManager.Instance.Switch(DefaultEnvironment, 0);
 
-                if (layerEntry.Layer == Layer.None || layerEntry.Action == UIAction.None)
-                    continue;
+                int count = LayerEntries.Count;
+                for (var i = 0; i < count; i++)
+                {
+                    LayerEntry layerEntry = LayerEntries[i];
 
-                UIManager.Instance.Switch(layerEntry.Layer, layerEntry.Action);
-            }
-        });
+                    if (layerEntry.Layer == Layer.None || layerEntry.Action == UIAction.None)
+                        continue;
 
-        if(CloseAtEsc)
-            Inputs.Instance.OnKeyDown += OnKeyDown;  
+                    UIManager.Instance.Switch(layerEntry.Layer, layerEntry.Action);
+                }
+            });
+
+            if (CloseAtEsc)
+                Inputs.Instance.OnKeyDown += OnKeyDown;
+        }
+
+        private void OnKeyDown()
+        {
+            if (Input.GetKeyDown("escape"))
+                Application.Quit();
+        }
+
+        void OnApplicationQuit()
+        {
+
+            DataManagement.Instance.ForceSaving();
+            //TileManagement.Instance.ForceSaving();
+            //GroveManagement.Instance.ForceSaving();
+
+            // Analytics
+            Analytics.Instance.UserEvent("EndedAfterSeconds", Time.time.ToString());
+
+        }
+
     }
-
-    private void OnKeyDown()
-    {
-        if (Input.GetKeyDown("escape"))
-            Application.Quit();
-    }
-
-    void OnApplicationQuit()
-    {
-
-        DataManagement.Instance.ForceSaving();
-        //TileManagement.Instance.ForceSaving();
-        //GroveManagement.Instance.ForceSaving();
-
-        // Analytics
-        Analytics.Instance.UserEvent("EndedAfterSeconds", Time.time.ToString());
-
-    }
-
 }

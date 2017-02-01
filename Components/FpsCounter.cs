@@ -11,94 +11,96 @@ using System;
  *   - FpsCounter.Instance.Activated = true/false;
  * For debug: Press "G" Key for de/activating FpsCounter
  */
-public class FpsCounter : MonoSingleton<FpsCounter>
+
+namespace TinyRoar.Framework
 {
-    public float updateInterval = 1.0f; // Set interval in Seconds (how often update text of fps-value)
-    public string fpsText = "fps";
-
-    private float accum; // FPS accumulated over the interval
-    private int frames; // Frames drawn over the interval
-    private float timeleft; // Left time for current interval
-    private Text textObj;
-
-    private bool _activated = true;
-    public bool Activated
+    public class FpsCounter : MonoSingleton<FpsCounter>
     {
-        get
+        public float updateInterval = 1.0f; // Set interval in Seconds (how often update text of fps-value)
+        public string fpsText = "fps";
+
+        private float accum; // FPS accumulated over the interval
+        private int frames; // Frames drawn over the interval
+        private float timeleft; // Left time for current interval
+        private Text textObj;
+
+        private bool _activated = true;
+
+        public bool Activated
         {
-            return _activated;
-        }
-        set
-        {
-            if (_activated != value)
+            get { return _activated; }
+            set
             {
-                Updater.Instance.OnUpdate -= UpdateTimer;
-                if (_activated)
-                    Updater.Instance.OnUpdate += UpdateTimer;
+                if (_activated != value)
+                {
+                    Updater.Instance.OnUpdate -= UpdateTimer;
+                    if (_activated)
+                        Updater.Instance.OnUpdate += UpdateTimer;
+                }
+                _activated = value;
             }
-            _activated = value;
         }
-    }
 
-    void Start()
-    {
-        textObj = this.GetComponent<Text>();
-        if (!textObj)
+        void Start()
         {
-            Debug.LogWarning("FpsCounter Object or Component not found!");
-            Activated = false;
+            textObj = this.GetComponent<Text>();
+            if (!textObj)
+            {
+                Debug.LogWarning("FpsCounter Object or Component not found!");
+                Activated = false;
+            }
+
+            if (!Activated)
+                return;
+
+            Updater.Instance.OnUpdate += UpdateTimer;
         }
 
-        if (!Activated)
-            return;
+        public override void OnDestroy()
+        {
+            //Updater.Instance.OnUpdate -= UpdateTimer;
+        }
 
-        Updater.Instance.OnUpdate += UpdateTimer;
-    }
+        void UpdateTimer()
+        {
 
-    public override void OnDestroy()
-    {
-        //Updater.Instance.OnUpdate -= UpdateTimer;
-    }
+            if (Input.GetKeyDown(KeyCode.G))
+                this.Activated = !this.Activated;
 
-    void UpdateTimer()
-    {
+            if (!this.Activated)
+                return;
 
-        if (Input.GetKeyDown(KeyCode.G))
-            this.Activated = !this.Activated;
+            timeleft -= Time.deltaTime;
+            accum += Time.timeScale/Time.deltaTime;
+            frames++;
 
-        if (!this.Activated)
-            return;
+            // Interval ended - update GUI text and start new interval
+            if (timeleft > 0)
+                return;
 
-        timeleft -= Time.deltaTime;
-        accum += Time.timeScale / Time.deltaTime;
-        frames++;
+            // display two fractional digits (f2 format)
+            float fps = accum/frames;
+            string format = System.String.Format("{0:F1} " + fpsText, fps);
+            textObj.text = format;
 
-        // Interval ended - update GUI text and start new interval
-        if (timeleft > 0)
-            return;
+            // show colored
+            if (fps < 10)
+                textObj.color = Color.red;
+            else if (fps < 30)
+                textObj.color = Color.yellow;
+            else if (fps < 60)
+                textObj.color = new Color(0, 0.6f, 0);
+            else
+                textObj.color = new Color(0, 0.4f, 0);
+            timeleft = updateInterval;
+            accum = 0.0F;
+            frames = 0;
 
-        // display two fractional digits (f2 format)
-        float fps = accum / frames;
-        string format = System.String.Format("{0:F1} " + fpsText, fps );
-        textObj.text = format;
+            //// Analytics
+            //if(fps < 25 && TinyLytics.Instance.IsRunning)
+            //    TinyLytics.Instance.GameplayEvent("fps", Convert.ToInt32(fps));
 
-        // show colored
-        if (fps < 10)
-            textObj.color = Color.red;
-        else if (fps < 30)
-            textObj.color = Color.yellow;
-        else if (fps < 60)
-            textObj.color = new Color(0, 0.6f, 0);
-        else
-            textObj.color = new Color(0, 0.4f, 0);
-        timeleft = updateInterval;
-        accum = 0.0F;
-        frames = 0;
-
-        //// Analytics
-        //if(fps < 25 && TinyLytics.Instance.IsRunning)
-        //    TinyLytics.Instance.GameplayEvent("fps", Convert.ToInt32(fps));
+        }
 
     }
-
 }

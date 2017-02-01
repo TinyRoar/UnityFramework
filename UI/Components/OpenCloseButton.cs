@@ -4,53 +4,56 @@ using System.Collections.Generic;
 using TinyRoar.Framework;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Button))]
-public class OpenCloseButton : BaseButton
+namespace TinyRoar.Framework
 {
-    // config
-    public bool ExitGame = false;
-    public GameEnvironment Environment;
-    public bool UseBlend;
-    public float Delay;
-    public List<LayerEntry> ActionList;
-    public List<AnimationConfig> Animations;
-
-    // action
-    protected override void ButtonAction()
+    [RequireComponent(typeof (Button))]
+    public class OpenCloseButton : BaseButton
     {
-        if (ExitGame)
-            Application.Quit();
+        // config
+        public bool ExitGame = false;
+        public GameEnvironment Environment;
+        public bool UseBlend;
+        public float Delay;
+        public List<LayerEntry> ActionList;
+        public List<AnimationConfig> Animations;
 
-        int count = ActionList.Count;
-        for (var i = 0; i < count; i++)
+        // action
+        protected override void ButtonAction()
         {
-            LayerEntry layerEntry = ActionList[i];
+            if (ExitGame)
+                Application.Quit();
 
-            if(layerEntry.Layer == Layer.None || layerEntry.Action == UIAction.None)
-                continue;
+            int count = ActionList.Count;
+            for (var i = 0; i < count; i++)
+            {
+                LayerEntry layerEntry = ActionList[i];
 
-            UIManager.Instance.Switch(layerEntry.Layer, layerEntry.Action, Delay);
-        }
+                if (layerEntry.Layer == Layer.None || layerEntry.Action == UIAction.None)
+                    continue;
 
-        // Play Animations
-        foreach (var anim in Animations)
-        {
-            if (anim.Object != null)
-                anim.Object.Play(anim.State);
-        }
+                UIManager.Instance.Switch(layerEntry.Layer, layerEntry.Action, Delay);
+            }
 
-        // Environment
-        if (Environment != global::GameEnvironment.None)
-        {
-            UIManager.Instance.Switch(Environment, Delay);
-        }
+            // Play Animations
+            foreach (var anim in Animations)
+            {
+                if (anim.Object != null)
+                    anim.Object.Play(anim.State);
+            }
 
-        // Blend
-        if (UseBlend)
-        {
-            UIManager.Instance.DoBlende();
+            // Environment
+            if (Environment != global::GameEnvironment.None)
+            {
+                UIManager.Instance.Switch(Environment, Delay);
+            }
+
+            // Blend
+            if (UseBlend)
+            {
+                UIManager.Instance.DoBlende();
+            }
+
         }
 
     }
-
 }

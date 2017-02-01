@@ -2,8 +2,11 @@
 using System.Collections;
 using JetBrains.Annotations;
 
-public interface IBaseCam
+namespace TinyRoar.Framework
 {
-    void DoEnable();
-    void DoDisable();
+    public interface IBaseCam
+    {
+        void DoEnable();
+        void DoDisable();
+    }
 }

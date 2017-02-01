@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HideMeAnimationEvent : MonoBehaviour
+namespace TinyRoar.Framework
 {
-
-    public void HideMe()
+    public class HideMeAnimationEvent : MonoBehaviour
     {
-        string layerName = this.name;
-        Layer layer = LayerEntry.StringToLayer(layerName);
-        UIManager.Instance.Switch(layer, UIAction.Hide);
-    }
 
+        public void HideMe()
+        {
+            string layerName = this.name;
+            Layer layer = LayerEntry.StringToLayer(layerName);
+            UIManager.Instance.Switch(layer, UIAction.Hide);
+        }
+
+    }
 }

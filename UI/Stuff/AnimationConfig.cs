@@ -2,11 +2,13 @@
 using System;
 using UnityEngine.Serialization;
 
-[Serializable]
-public class AnimationConfig
+namespace TinyRoar.Framework
 {
-    public Animator Object;
-    [FormerlySerializedAs("AnimationName")]
-    public string State;
+    [Serializable]
+    public class AnimationConfig
+    {
+        public Animator Object;
+        [FormerlySerializedAs("AnimationName")] public string State;
 
+    }
 }

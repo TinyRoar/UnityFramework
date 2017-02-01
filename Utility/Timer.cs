@@ -16,90 +16,89 @@ using System.Linq;
  *   - Timer.Instance.Add(1.0f, EndTimerEvent);
  */
 
-public class Timer : Singleton<Timer>
+namespace TinyRoar.Framework
 {
-    // internal
-    public Dictionary<int, Action> EndTimer
+    public class Timer : Singleton<Timer>
     {
-        get;
-        private set;
-    }
-    private int nextTimerId;
-    private static bool isUpdate = false;
-    private static List<int> expiredIndexList = new List<int>();
+        // internal
+        public Dictionary<int, Action> EndTimer { get; private set; }
+        private int nextTimerId;
+        private static bool isUpdate = false;
+        private static List<int> expiredIndexList = new List<int>();
 
-    // Constructor
-    public Timer()
-    {
-        EndTimer = new Dictionary<int, Action>();
-    }
-
-    void OnDestroy()
-    {
-        Updater.Instance.OnUpdate -= DoUpdate;
-    }
-
-    public void Add(float time, Action endEvent)
-    {
-        if(time == 0)
+        // Constructor
+        public Timer()
         {
-            endEvent();
-            return;
+            EndTimer = new Dictionary<int, Action>();
         }
 
-        // insert into list
-        this.EndTimer.Add(nextTimerId, endEvent);
-
-        // Setup timer
-        System.Timers.Timer aTimer = new System.Timers.Timer(time * 1000);
-        int zahl = new Int32();
-        zahl = nextTimerId;
-        aTimer.Elapsed += (sender, args) => KeepAliveElapsed(sender, zahl);
-        aTimer.Start();
-
-        nextTimerId++;
-    }
-
-    public static void KeepAliveElapsed(object source, int timerIndex)
-    {
-        // stop timer
-        ((System.Timers.Timer)source).Stop();
-
-        if(isUpdate == false)
+        void OnDestroy()
         {
-            // enable Update
-            isUpdate = true;
-            Updater.Instance.OnUpdate += DoUpdate;
+            Updater.Instance.OnUpdate -= DoUpdate;
         }
 
-        // add index to list of expired timer
-        expiredIndexList.Add(timerIndex);
-
-    }
-
-    static void DoUpdate()
-    {
-        // disable Update
-        isUpdate = false;
-        Updater.Instance.OnUpdate -= DoUpdate;
-
-        // loop
-        foreach (int timerIndex in expiredIndexList.ToList())
+        public void Add(float time, Action endEvent)
         {
-            // get action
-            Action action = null;
-            Timer.Instance.EndTimer.TryGetValue(timerIndex, out action);
-            if (action != null)
+            if (time == 0)
             {
-                // exec TimerEnd event
-                action();
-                // insert into list
-                Timer.Instance.EndTimer.Remove(timerIndex);
+                endEvent();
+                return;
             }
-            // clear value of expired timer
-            expiredIndexList.Remove(timerIndex);
+
+            // insert into list
+            this.EndTimer.Add(nextTimerId, endEvent);
+
+            // Setup timer
+            System.Timers.Timer aTimer = new System.Timers.Timer(time*1000);
+            int zahl = new Int32();
+            zahl = nextTimerId;
+            aTimer.Elapsed += (sender, args) => KeepAliveElapsed(sender, zahl);
+            aTimer.Start();
+
+            nextTimerId++;
+        }
+
+        public static void KeepAliveElapsed(object source, int timerIndex)
+        {
+            // stop timer
+            ((System.Timers.Timer) source).Stop();
+
+            if (isUpdate == false)
+            {
+                // enable Update
+                isUpdate = true;
+                Updater.Instance.OnUpdate += DoUpdate;
+            }
+
+            // add index to list of expired timer
+            expiredIndexList.Add(timerIndex);
+
+        }
+
+        static void DoUpdate()
+        {
+            // disable Update
+            isUpdate = false;
+            Updater.Instance.OnUpdate -= DoUpdate;
+
+            // loop
+            foreach (int timerIndex in expiredIndexList.ToList())
+            {
+                // get action
+                Action action = null;
+                Timer.Instance.EndTimer.TryGetValue(timerIndex, out action);
+                if (action != null)
+                {
+                    // exec TimerEnd event
+                    action();
+                    // insert into list
+                    Timer.Instance.EndTimer.Remove(timerIndex);
+                }
+                // clear value of expired timer
+                expiredIndexList.Remove(timerIndex);
+            }
+
         }
 
     }
-
 }

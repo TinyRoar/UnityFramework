@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
- 
-public class DontDestroyOnLoad : MonoBehaviour
-{
 
-    // Initialisation
-    public void Awake() {
-        DontDestroyOnLoad(this);
+namespace TinyRoar.Framework
+{
+    public class DontDestroyOnLoad : MonoBehaviour
+    {
+
+        // Initialisation
+        public void Awake()
+        {
+            DontDestroyOnLoad(this);
+        }
+
     }
- 
 }

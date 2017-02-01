@@ -2,44 +2,47 @@
 using System.Collections;
 using TinyRoar.Framework;
 
-public class Events : Singleton<Events>
+namespace TinyRoar.Framework
 {
-    // Gameplay Status
-    private static GameplayStatus _gameplayStatus;
-    public static GameplayStatus GameplayStatus
+    public class Events : Singleton<Events>
     {
-        get
+        // Gameplay Status
+        private static GameplayStatus _gameplayStatus;
+
+        public static GameplayStatus GameplayStatus
         {
-            return _gameplayStatus;
+            get { return _gameplayStatus; }
+            set
+            {
+                if (_gameplayStatus == value)
+                    return;
+                GameplayStatus oldStatus = _gameplayStatus;
+                _gameplayStatus = value;
+                if (GameConfig.Instance.Debug)
+                    Debug.Log("GameplayStatus=" + value);
+                Events.Instance.FireGameplayStatusChange(oldStatus, _gameplayStatus);
+            }
         }
-        set
+
+        public delegate void GameplayStatusChange(GameplayStatus oldGameplayStatus, GameplayStatus newGameplayStatus);
+
+        public event GameplayStatusChange OnGameplayStatusChange;
+
+        public void FireGameplayStatusChange(GameplayStatus oldGameplayStatus, GameplayStatus newGameplayStatus)
         {
-            if (_gameplayStatus == value)
-                return;
-            GameplayStatus oldStatus = _gameplayStatus;
-            _gameplayStatus = value;
-            if (GameConfig.Instance.Debug)
-                Debug.Log("GameplayStatus=" + value);
-            Events.Instance.FireGameplayStatusChange(oldStatus, _gameplayStatus);
+            if (OnGameplayStatusChange != null)
+                OnGameplayStatusChange(oldGameplayStatus, newGameplayStatus);
         }
-    }
 
-    public delegate void GameplayStatusChange(GameplayStatus oldGameplayStatus, GameplayStatus newGameplayStatus);
-    public event GameplayStatusChange OnGameplayStatusChange;
+        // Layer
+        public delegate void LayerAction(Layer layer, UIAction action);
 
-    public void FireGameplayStatusChange(GameplayStatus oldGameplayStatus, GameplayStatus newGameplayStatus)
-    {
-        if (OnGameplayStatusChange != null)
-            OnGameplayStatusChange(oldGameplayStatus, newGameplayStatus);
-    }
+        public event LayerAction OnLayerChange;
 
-    // Layer
-    public delegate void LayerAction(Layer layer, UIAction action);
-    public event LayerAction OnLayerChange;
-
-    public void FireLayerChange(Layer layer, UIAction action)
-    {
-        if (OnLayerChange != null)
-            OnLayerChange(layer, action);
+        public void FireLayerChange(Layer layer, UIAction action)
+        {
+            if (OnLayerChange != null)
+                OnLayerChange(layer, action);
+        }
     }
 }
