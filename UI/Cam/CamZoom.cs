@@ -10,7 +10,7 @@ using TinyRoar.Framework;
 namespace TinyRoar.Framework
 {
     [RequireComponent(typeof (CamConfig))]
-    public class CamZoom : MonoBehaviour, IBaseCam
+    public class CamZoom : MonoBehaviour, ICam
     {
         [SerializeField] private float ZoomSpeed = 0.5f;
 

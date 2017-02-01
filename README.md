@@ -2,24 +2,25 @@
 Simple C# Codebase as Template for Unity3D Projects
 
 
-Tiny Roar Framework | by Dario D. Müller
-2016-04-11
+(c) 2015 - 2017 by Tiny Roar
+Contributor:
+
+* [Dario D. Müller](https://github.com/DarioDomiDE)
+* [Sebasian Sacher](https://github.com/ip0p)
+
 www.tinyroar-games.com
 
-contains classes
+contains classes:
 
 	Components
-		- DontDestroyOnLoad
-		- MonoSingleton
-		- Singleton
-
+		- FpsCounter
+		- SoundManager
 	Core
-		- Events
-		- Updater
 		- Encrypt
-
+		- Events
+		- Inputs
+		- Updater
 	Data
-		- DataStorage
 		Collection
 			- BaseCollection
 			- PairCollection
@@ -27,29 +28,50 @@ contains classes
 			- BaseElement
 			- Pair
 		Management
-			- BaseCollection
-			- DataCollection
-
+			- BaseManagement
+			- DataManagement
+		- DataStorage
+	Manager
+		- InitManager
+	Math
+		Random
+			- IRandomGenerator
+			- MersenneTwister
+			- RandomGenerator
+		- Vector2i
 	Request
 		- Base64
-		- JSONObject
 		- MiniJSON
 		- RequestManager
-
-	TinyLytics
-		- Readme
-		- TinyLytics
-
 	UI
-		- SortingLayerExposer
-		- UiBtnDelay
-
+		Abstract
+			- BaseButton
+			- BaseCounter
+			- Scrollable
+		Cam
+			- CamConfig
+			- CamMovement
+			- CamZoom
+			- ICam
+		Components
+			- ButtonDelay
+			- FpsCounter
+			- GameplayButton
+			- HideMeAnimationEvent
+			- LayerConfig
+			- LevelLoader
+			- OpenCloseButton
+			- ScriptedAnimation
+			- UIManager
+		Stuff
+			- AnimationConfig
+			- LayerEntry
+			- LayerManager
+			- SortingLayerExposer
 	Utility
 		- CodeHelper
-		- FpsCounter
+		- DontDestroyOnLoad
 		- GameConfig
-		- Scrollable
-		- Settings
-		- SoundManager
+		- MonoSingleton
+		- Singleton
 		- Timer
-		- Vector2i

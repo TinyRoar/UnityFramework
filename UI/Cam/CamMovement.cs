@@ -7,7 +7,7 @@ namespace TinyRoar.Framework
 {
     // Move Camera Script
     [RequireComponent(typeof (CamConfig))]
-    public class CamMovement : MonoBehaviour, IBaseCam
+    public class CamMovement : MonoBehaviour, ICam
     {
 
         [SerializeField] private float MinX;
@@ -40,9 +40,9 @@ namespace TinyRoar.Framework
         {
             _cameraComponent = this.GetComponent<Camera>();
 
-#if UNITY_EDITOR
-            SpeedMobileMultiply = new Vector2(1, 1);
-        #endif
+			#if UNITY_EDITOR
+				SpeedMobileMultiply = new Vector2(1, 1);
+			#endif
 
             UpdateMinMax();
 
