@@ -3,11 +3,16 @@ using TinyRoar.Framework;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
+using System.Linq;
 
 namespace TinyRoar.Framework
 {
     public class UIManager : MonoSingleton<UIManager>
     {
+        [SerializeField]
+        private string UIName = "UI";
+        [SerializeField]
+        private string EnvironmentName = "Environment";
 
         [SerializeField] private float _blendTime = 0.5f;
         [SerializeField] private float BaseDelay = 0.5f;
@@ -29,17 +34,11 @@ namespace TinyRoar.Framework
             // init
             _environmentList = new Dictionary<GameEnvironment, Transform>();
 
-            // get Canvas UI
-            GameObject ui = GameObject.Find("UI");
-            if (ui == null)
-            {
-                Debug.LogWarning("Canvas named 'UI' not found :'(");
-                return;
-            }
+            // get UI
+            Transform ui = GetTransformWithName(UIName);
 
             // save all Layer and hide it
-            Debug.Log(ui.transform);
-            foreach (Transform item in ui.transform)
+            foreach (Transform item in ui)
             {
                 LayerEntry layer = new LayerEntry(item.name, item.gameObject);
                 LayerManager.AddLayerEntry(layer);
@@ -47,21 +46,44 @@ namespace TinyRoar.Framework
             }
 
             // get Environments
-            GameObject env = GameObject.Find("Environment");
-            if (env == null)
-            {
-                Debug.LogWarning("Container named 'Environment' not found :'(");
-                return;
-            }
+            Transform env = GetTransformWithName(EnvironmentName);
 
             // save all Environment and hide it
-            foreach (Transform item in env.transform)
+            foreach (Transform item in env)
             {
                 GameEnvironment envKey = GameEnvironment.None;
                 envKey = (GameEnvironment) Enum.Parse(typeof (GameEnvironment), item.name);
                 Hide(item);
                 _environmentList.Add(envKey, item);
             }
+
+        }
+
+        private Transform GetTransformWithName(string name)
+        {
+            var objects = GameObject.FindObjectsOfType(typeof(GameObject)); //get all gameobjects
+            Transform obj = null;
+            for (var f = 0; f < objects.Length; f++) //filter the objects that don't match
+            {
+                if (objects[f].name == name)
+                {
+                    if (obj != null)
+                    {
+                        // check if 2 or more objects
+                        Debug.LogError("UI Manager: Multiple GameObject with name '" + name + "' found :'(");
+                        return null;
+                    }
+                    obj = ((GameObject)objects[f]).transform;
+                }
+            }
+
+            // check if no object
+            if (obj == null)
+            {
+                Debug.LogError("UI Manager: No GameObject with name '" + name + "' found :'(");
+                return null;
+            }
+            return obj;
         }
 
         public void Switch(GameEnvironment environment, float delay = -1)
