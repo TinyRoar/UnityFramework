@@ -10,7 +10,7 @@ namespace TinyRoar.Framework
     {
         [SerializeField] private SaveMethod SaveMethod = SaveMethod.BinaryCrypt;
 
-        [SerializeField] private int FPS = 30;
+        [SerializeField] private int FPS = 60;
 
         [SerializeField] private GameplayStatus DefaultGameplayStatus = GameplayStatus.None;
 
@@ -26,6 +26,7 @@ namespace TinyRoar.Framework
 
         public static Thread MainThread = null;
 
+        public bool UseViewManager;
 
 
         public override void Awake()
@@ -69,6 +70,9 @@ namespace TinyRoar.Framework
 
             if (CloseAtEsc)
                 Inputs.Instance.OnKeyDown += OnKeyDown;
+
+            if (UseViewManager)
+                ViewManager.Instance.Init();
         }
 
         private void OnKeyDown()

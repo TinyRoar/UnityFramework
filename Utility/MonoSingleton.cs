@@ -54,7 +54,6 @@ namespace TinyRoar.Framework
         {
 	        if (_instance == null)
                 _instance = this as T;
-
             isApplicationExit = false;
         }
 
@@ -62,10 +61,14 @@ namespace TinyRoar.Framework
         /// <summary>
         /// Destroy at ApplicationQuit
         /// </summary>
-        public virtual void OnDestroy()
+        protected virtual void OnDestroy()
+        {
+            _instance = null;
+        }
+
+        protected virtual void OnApplicationQuit()
         {
             isApplicationExit = true;
-            _instance = null;
         }
 
     }

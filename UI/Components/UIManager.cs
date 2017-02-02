@@ -3,11 +3,16 @@ using TinyRoar.Framework;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
+using System.Linq;
 
 namespace TinyRoar.Framework
 {
     public class UIManager : MonoSingleton<UIManager>
     {
+        [SerializeField]
+        private string UIName = "UI";
+        [SerializeField]
+        private string EnvironmentName = "Environment";
 
         [SerializeField] private float _blendTime = 0.5f;
         [SerializeField] private float BaseDelay = 0.5f;
@@ -29,39 +34,56 @@ namespace TinyRoar.Framework
             // init
             _environmentList = new Dictionary<GameEnvironment, Transform>();
 
-            // get Canvas UI
-            GameObject ui = GameObject.Find("UI");
-            if (ui == null)
-            {
-                Debug.LogWarning("Canvas named 'UI' not found :'(");
-                return;
-            }
+            // get UI
+            Transform ui = GetTransformWithName(UIName);
 
             // save all Layer and hide it
-            Debug.Log(ui.transform);
-            foreach (Transform item in ui.transform)
+            foreach (Transform item in ui)
             {
                 LayerEntry layer = new LayerEntry(item.name, item.gameObject);
-                LayerManager.AddLayerEntry(layer);
+                LayerManager.Instance.AddLayerEntry(layer);
                 Hide(layer.Layer);
             }
 
             // get Environments
-            GameObject env = GameObject.Find("Environment");
-            if (env == null)
-            {
-                Debug.LogWarning("Container named 'Environment' not found :'(");
-                return;
-            }
+            Transform env = GetTransformWithName(EnvironmentName);
 
             // save all Environment and hide it
-            foreach (Transform item in env.transform)
+            foreach (Transform item in env)
             {
                 GameEnvironment envKey = GameEnvironment.None;
                 envKey = (GameEnvironment) Enum.Parse(typeof (GameEnvironment), item.name);
                 Hide(item);
                 _environmentList.Add(envKey, item);
             }
+
+        }
+
+        private Transform GetTransformWithName(string name)
+        {
+            var objects = GameObject.FindObjectsOfType(typeof(GameObject)); //get all gameobjects
+            Transform obj = null;
+            for (var f = 0; f < objects.Length; f++) //filter the objects that don't match
+            {
+                if (objects[f].name == name)
+                {
+                    if (obj != null)
+                    {
+                        // check if 2 or more objects
+                        Debug.LogError("UI Manager: Multiple GameObject with name '" + name + "' found :'(");
+                        return null;
+                    }
+                    obj = ((GameObject)objects[f]).transform;
+                }
+            }
+
+            // check if no object
+            if (obj == null)
+            {
+                Debug.LogError("UI Manager: No GameObject with name '" + name + "' found :'(");
+                return null;
+            }
+            return obj;
         }
 
         public void Switch(GameEnvironment environment, float delay = -1)
@@ -130,8 +152,8 @@ namespace TinyRoar.Framework
             if (layer == Layer.None || action == UIAction.None)
                 return;
             if (action == UIAction.Toggle)
-                action = LayerManager.GetToggledStatus(layer);
-            if (LayerManager.IsAction(layer, action))
+                action = LayerManager.Instance.GetToggledStatus(layer);
+            if (LayerManager.Instance.IsAction(layer, action))
                 return;
 
             if (action == UIAction.Hide)
@@ -142,7 +164,7 @@ namespace TinyRoar.Framework
             else if (action == UIAction.Show)
             {
                 // Delayed or not
-                if (delay == 0 || LayerManager.IsNothingVisible())
+                if (delay == 0 || LayerManager.Instance.IsNothingVisible())
                 {
                     // set layer immediately
                     DoAnimation(layer);
@@ -179,11 +201,12 @@ namespace TinyRoar.Framework
             for (var i = 0; i < count; i++)
             {
                 Layer layer = _hideLayerList[i];
-                UIAction action = LayerManager.GetToggledStatus(layer);
+                UIAction action = LayerManager.Instance.GetToggledStatus(layer);
                 if (action == UIAction.Hide)
                 {
+                    // important: do trigger action/event first, then hide it
+                    LayerManager.Instance.SetAction(layer, action);
                     this.Hide(layer);
-                    LayerManager.SetAction(layer, action);
                 }
                 else
                 {
@@ -227,7 +250,7 @@ namespace TinyRoar.Framework
 
         private void DoAnimation(Layer layer)
         {
-            UIAction action = LayerManager.GetToggledStatus(layer);
+            UIAction action = LayerManager.Instance.GetToggledStatus(layer);
 
             if (layer == Layer.None)
                 return;
@@ -239,7 +262,7 @@ namespace TinyRoar.Framework
                 this.Show(layer);
 
                 // sound
-                LayerEntry layerEntry = LayerManager.GetLayerEntry(layer);
+                LayerEntry layerEntry = LayerManager.Instance.GetLayerEntry(layer);
                 if (layerEntry == null)
                 {
                     Debug.LogWarning("Layer named " + layer + " not found");
@@ -258,7 +281,7 @@ namespace TinyRoar.Framework
                         SoundManager.Instance.Play(UIConfig.OpenSound, SoundManager.SoundType.Soundeffect, false, 0.5f);
                 }
 
-                LayerManager.SetAction(layer, action);
+                LayerManager.Instance.SetAction(layer, action);
 
             }
             // Fade Out animation
@@ -266,7 +289,7 @@ namespace TinyRoar.Framework
             {
                 //bool isAnimation = false;
                 // check if UIConfig Component exists
-                LayerEntry layerEntry = LayerManager.GetLayerEntry(layer);
+                LayerEntry layerEntry = LayerManager.Instance.GetLayerEntry(layer);
                 if (layerEntry == null)
                 {
                     Debug.LogWarning("Layer named " + layer + " not found");
@@ -324,7 +347,7 @@ namespace TinyRoar.Framework
 
         private void Show(Layer layer)
         {
-            LayerEntry layerEntry = LayerManager.GetLayerEntry(layer);
+            LayerEntry layerEntry = LayerManager.Instance.GetLayerEntry(layer);
             if (layerEntry == null)
             {
                 Debug.LogWarning("Layer named " + layer + " not found");
@@ -349,7 +372,7 @@ namespace TinyRoar.Framework
 
         private void Hide(Layer layer)
         {
-            LayerEntry layerEntry = LayerManager.GetLayerEntry(layer);
+            LayerEntry layerEntry = LayerManager.Instance.GetLayerEntry(layer);
             if (layerEntry == null)
             {
                 Debug.LogWarning("Layer named " + layer + " not found");
