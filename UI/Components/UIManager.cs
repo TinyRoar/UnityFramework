@@ -41,7 +41,7 @@ namespace TinyRoar.Framework
             foreach (Transform item in ui)
             {
                 LayerEntry layer = new LayerEntry(item.name, item.gameObject);
-                LayerManager.AddLayerEntry(layer);
+                LayerManager.Instance.AddLayerEntry(layer);
                 Hide(layer.Layer);
             }
 
@@ -152,8 +152,8 @@ namespace TinyRoar.Framework
             if (layer == Layer.None || action == UIAction.None)
                 return;
             if (action == UIAction.Toggle)
-                action = LayerManager.GetToggledStatus(layer);
-            if (LayerManager.IsAction(layer, action))
+                action = LayerManager.Instance.GetToggledStatus(layer);
+            if (LayerManager.Instance.IsAction(layer, action))
                 return;
 
             if (action == UIAction.Hide)
@@ -164,7 +164,7 @@ namespace TinyRoar.Framework
             else if (action == UIAction.Show)
             {
                 // Delayed or not
-                if (delay == 0 || LayerManager.IsNothingVisible())
+                if (delay == 0 || LayerManager.Instance.IsNothingVisible())
                 {
                     // set layer immediately
                     DoAnimation(layer);
@@ -201,11 +201,12 @@ namespace TinyRoar.Framework
             for (var i = 0; i < count; i++)
             {
                 Layer layer = _hideLayerList[i];
-                UIAction action = LayerManager.GetToggledStatus(layer);
+                UIAction action = LayerManager.Instance.GetToggledStatus(layer);
                 if (action == UIAction.Hide)
                 {
+                    // important: do trigger action/event first, then hide it
+                    LayerManager.Instance.SetAction(layer, action);
                     this.Hide(layer);
-                    LayerManager.SetAction(layer, action);
                 }
                 else
                 {
@@ -249,7 +250,7 @@ namespace TinyRoar.Framework
 
         private void DoAnimation(Layer layer)
         {
-            UIAction action = LayerManager.GetToggledStatus(layer);
+            UIAction action = LayerManager.Instance.GetToggledStatus(layer);
 
             if (layer == Layer.None)
                 return;
@@ -261,7 +262,7 @@ namespace TinyRoar.Framework
                 this.Show(layer);
 
                 // sound
-                LayerEntry layerEntry = LayerManager.GetLayerEntry(layer);
+                LayerEntry layerEntry = LayerManager.Instance.GetLayerEntry(layer);
                 if (layerEntry == null)
                 {
                     Debug.LogWarning("Layer named " + layer + " not found");
@@ -280,7 +281,7 @@ namespace TinyRoar.Framework
                         SoundManager.Instance.Play(UIConfig.OpenSound, SoundManager.SoundType.Soundeffect, false, 0.5f);
                 }
 
-                LayerManager.SetAction(layer, action);
+                LayerManager.Instance.SetAction(layer, action);
 
             }
             // Fade Out animation
@@ -288,7 +289,7 @@ namespace TinyRoar.Framework
             {
                 //bool isAnimation = false;
                 // check if UIConfig Component exists
-                LayerEntry layerEntry = LayerManager.GetLayerEntry(layer);
+                LayerEntry layerEntry = LayerManager.Instance.GetLayerEntry(layer);
                 if (layerEntry == null)
                 {
                     Debug.LogWarning("Layer named " + layer + " not found");
@@ -346,7 +347,7 @@ namespace TinyRoar.Framework
 
         private void Show(Layer layer)
         {
-            LayerEntry layerEntry = LayerManager.GetLayerEntry(layer);
+            LayerEntry layerEntry = LayerManager.Instance.GetLayerEntry(layer);
             if (layerEntry == null)
             {
                 Debug.LogWarning("Layer named " + layer + " not found");
@@ -371,7 +372,7 @@ namespace TinyRoar.Framework
 
         private void Hide(Layer layer)
         {
-            LayerEntry layerEntry = LayerManager.GetLayerEntry(layer);
+            LayerEntry layerEntry = LayerManager.Instance.GetLayerEntry(layer);
             if (layerEntry == null)
             {
                 Debug.LogWarning("Layer named " + layer + " not found");

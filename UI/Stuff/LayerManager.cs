@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace TinyRoar.Framework
 {
-    public class LayerManager
+    public class LayerManager : Singleton<LayerManager>
     {
-        private static List<LayerEntry> _layerList = new List<LayerEntry>();
+        private readonly List<LayerEntry> _layerList = new List<LayerEntry>();
 
-        public static UIAction GetAction(Layer layer)
+        public UIAction GetAction(Layer layer)
         {
             for (var i = 0; i < _layerList.Count; i++)
             {
@@ -19,7 +19,7 @@ namespace TinyRoar.Framework
             return UIAction.None;
         }
 
-        public static LayerEntry GetLayerEntry(Layer layer)
+        public LayerEntry GetLayerEntry(Layer layer)
         {
             for (var i = 0; i < _layerList.Count; i++)
             {
@@ -31,7 +31,7 @@ namespace TinyRoar.Framework
             return null;
         }
 
-        public static bool IsAction(Layer layer, UIAction action)
+        public bool IsAction(Layer layer, UIAction action)
         {
             for (var i = 0; i < _layerList.Count; i++)
             {
@@ -42,12 +42,12 @@ namespace TinyRoar.Framework
             return false;
         }
 
-        public static void AddLayerEntry(LayerEntry layer)
+        public void AddLayerEntry(LayerEntry layer)
         {
             _layerList.Add(layer);
         }
 
-        public static void SetAction(Layer layer, UIAction action)
+        public void SetAction(Layer layer, UIAction action)
         {
             if (action == UIAction.None || action == UIAction.Toggle)
                 return;
@@ -56,12 +56,12 @@ namespace TinyRoar.Framework
                 if (_layerList[i].Layer != layer)
                     continue;
                 _layerList[i].Action = action;
-                //Events.Instance.FireLayerChange(layer, action);
+                Events.Instance.FireLayerChange(layer, action);
                 return;
             }
         }
 
-        public static UIAction GetToggledStatus(Layer layer)
+        public UIAction GetToggledStatus(Layer layer)
         {
             for (var i = 0; i < _layerList.Count; i++)
             {
@@ -72,13 +72,11 @@ namespace TinyRoar.Framework
             return UIAction.None;
         }
 
-        public static bool IsNothingVisible()
+        public bool IsNothingVisible()
         {
             for (var i = 0; i < _layerList.Count; i++)
-            {
                 if (_layerList[i].Action == UIAction.Show)
                     return false;
-            }
             return true;
         }
 
