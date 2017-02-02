@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace TinyRoar.Framework
 {
@@ -6,14 +7,16 @@ namespace TinyRoar.Framework
     public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour {
 
         private static T _instance;
-        private static bool applicationIsQuitting = false;
+        private static bool isApplicationExit = false;
 
-        // get / set Instance
+        /// <summary>
+        /// get / set Instance
+        /// </summary>
         public static T Instance
         {
             get
             {
-                if (applicationIsQuitting)
+                if (isApplicationExit)
                     return null;
 
                 if (_instance == null)
@@ -23,13 +26,16 @@ namespace TinyRoar.Framework
                 if(InitManager.MainThread != null)
                     isMainThread = InitManager.MainThread.Equals(System.Threading.Thread.CurrentThread);
                 if (isMainThread && FindObjectsOfType<T>().Length > 1)
-                    Debug.LogError("There are more then one GameObjects with this script!!!");
+                {
+                    Type typeOfAction = typeof(T);
+                    Debug.LogError(+FindObjectsOfType<T>().Length + " GameObjects with script '" + typeOfAction.Name + "' in scene!!!");
+                }
 
                 if (_instance == null)
                 {
                     GameObject singleton = new GameObject();
                     _instance = singleton.AddComponent<T>();
-                    singleton.name = "Create singleton: " + typeof(T).ToString();
+                    singleton.name = "(singleton) " + typeof(T).ToString();
                     Debug.LogWarning(singleton.name + " created");
                 }
 
@@ -41,18 +47,25 @@ namespace TinyRoar.Framework
             }
         }
 
-        // initialization
-        public virtual void Awake () {
+        /// <summary>
+        /// Initialisation
+        /// </summary>
+        public virtual void Awake ()
+        {
 	        if (_instance == null)
-	        {
                 _instance = this as T;
-            }
-            applicationIsQuitting = false;
+
+            isApplicationExit = false;
         }
 
+
+        /// <summary>
+        /// Destroy at ApplicationQuit
+        /// </summary>
         public virtual void OnDestroy()
         {
-            applicationIsQuitting = true;
+            isApplicationExit = true;
+            _instance = null;
         }
 
     }
