@@ -25,7 +25,7 @@ namespace TinyRoar.Framework
 
             if (layerEntry.View == null)
             {
-                Debug.LogError("Layer " + layer.ToString() + ": View not found :'(");
+                Debug.LogWarning("View" + layer.ToString() + " not found :'(");
                 return;
             }
 

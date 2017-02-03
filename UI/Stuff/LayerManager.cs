@@ -72,6 +72,18 @@ namespace TinyRoar.Framework
             return UIAction.None;
         }
 
+        public List<LayerEntry> GetAllLayersWithAction(UIAction action)
+        {
+            List<LayerEntry> layerList = new List<LayerEntry>();
+            for (var i = 0; i < _layerList.Count; i++)
+            {
+                if (_layerList[i].Action != action)
+                    continue;
+                layerList.Add(_layerList[i]);
+            }
+            return layerList;
+        }
+
         public bool IsNothingVisible()
         {
             for (var i = 0; i < _layerList.Count; i++)

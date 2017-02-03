@@ -10,15 +10,14 @@ public class RebuildEnums : EditorWindow
     static string environmentsEnums = "";
     static string layerEnums = "";
 
-    [MenuItem("Tiny Roar/Reload Layer and Environments")]
+    [MenuItem("Tiny Roar/Build Enum")]
     public static void ShowWindow()
     {
         MonoBehaviour.print("Reloading Layer and Environments...");
 
         // init
-        environmentsEnums += "public enum GameEnvironment{None,";
-        layerEnums += "public enum Layer{None,";
-
+        environmentsEnums = "public enum GameEnvironment{None,";
+        layerEnums = "public enum Layer{None,";
 
         CreateEnvironmentEnums();
         CreateLayerEnums();

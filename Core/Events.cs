@@ -7,9 +7,9 @@ namespace TinyRoar.Framework
     public class Events : Singleton<Events>
     {
         // Gameplay Status
-        private static GameplayStatus _gameplayStatus;
+        private GameplayStatus _gameplayStatus;
 
-        public static GameplayStatus GameplayStatus
+        public GameplayStatus GameplayStatus
         {
             get { return _gameplayStatus; }
             set

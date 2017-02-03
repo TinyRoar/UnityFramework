@@ -59,13 +59,16 @@ namespace TinyRoar.Framework
 
 
         /// <summary>
-        /// Destroy at ApplicationQuit
+        /// Kill instance at OnDestroy
         /// </summary>
         protected virtual void OnDestroy()
         {
             _instance = null;
         }
 
+        /// <summary>
+        /// Destroy at ApplicationQuit
+        /// </summary>
         protected virtual void OnApplicationQuit()
         {
             isApplicationExit = true;

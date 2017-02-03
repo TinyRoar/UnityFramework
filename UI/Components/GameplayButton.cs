@@ -12,10 +12,10 @@ namespace TinyRoar.Framework
 
         protected override void ButtonAction()
         {
-            if (Events.GameplayStatus == Status)
-                Events.GameplayStatus = OrToggleWithStatus;
+            if (Events.Instance.GameplayStatus == Status)
+                Events.Instance.GameplayStatus = OrToggleWithStatus;
             else
-                Events.GameplayStatus = Status;
+                Events.Instance.GameplayStatus = Status;
         }
 
     }

@@ -53,7 +53,7 @@ namespace TinyRoar.Framework
             // execute next frame
             Updater.Instance.ExecuteNextFrame(delegate
             {
-                Events.GameplayStatus = DefaultGameplayStatus;
+                Events.Instance.GameplayStatus = DefaultGameplayStatus;
                 UIManager.Instance.Switch(DefaultEnvironment, 0);
 
                 int count = LayerEntries.Count;
@@ -83,13 +83,10 @@ namespace TinyRoar.Framework
 
         void OnApplicationQuit()
         {
-
-            DataManagement.Instance.ForceSaving();
+            // Does it work to do in BaseManagement instead of here?
+            //DataManagement.Instance.ForceSaving();
             //TileManagement.Instance.ForceSaving();
             //GroveManagement.Instance.ForceSaving();
-
-            // Analytics
-            //Analytics.Instance.UserEvent("EndedAfterSeconds", Time.time.ToString());
 
         }
 

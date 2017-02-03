@@ -175,8 +175,6 @@ namespace TinyRoar.Framework
                     AddHideLayerList(layer);
                 }
             }
-
-
         }
 
         private void AddHideLayerList(Layer layer)
@@ -244,6 +242,16 @@ namespace TinyRoar.Framework
         private void TimerEndBlendeDisable()
         {
             this._blend.SetActive(false);
+        }
+
+        public void HideAll()
+        {
+            List<LayerEntry> layerList = LayerManager.Instance.GetAllLayersWithAction(UIAction.Show);
+            for (int i = 0; i < layerList.Count; i++)
+            {
+                Debug.Log(layerList[i].Layer);
+                this.Switch(layerList[i].Layer, UIAction.Hide);
+            }
         }
 
         // Animation
@@ -388,6 +396,8 @@ namespace TinyRoar.Framework
 
         private void Hide(GameObject obj)
         {
+            if (!obj.activeSelf)
+                return;
             if (GameConfig.Instance.Debug && obj != null)
                 Debug.LogWarning("Hide(" + obj.name + ")");
             if (obj == null)
