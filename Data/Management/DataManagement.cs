@@ -70,6 +70,18 @@ namespace TinyRoar.Framework
             return pair;
         }
 
+        public Pair Get(string key, string defaultValue)
+        {
+            if(this.CheckItem(key))
+                return (this.Collection as PairCollection).Get(new Pair(key));
+            return new Pair(defaultValue);
+        }
+
+        public Pair Get(string key, int defaultValue)
+        {
+            return this.Get(key, defaultValue.ToString());
+        }
+
         public Pair Get(string key)
         {
             return (this.Collection as PairCollection).Get(new Pair(key));
