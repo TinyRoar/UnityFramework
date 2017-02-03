@@ -58,8 +58,14 @@ namespace TinyRoar.Framework
 
         protected override void OnDestroy()
         {
-            Updater.Instance.OnUpdate -= UpdateTimer;
             base.OnDestroy();
+            try
+            {
+                Updater.Instance.OnUpdate -= UpdateTimer;
+            }
+            catch (NullReferenceException e)
+            {
+            }
         }
 
         void UpdateTimer()

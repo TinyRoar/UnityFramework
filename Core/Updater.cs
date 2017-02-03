@@ -40,11 +40,6 @@ namespace TinyRoar.Framework
             }
         }
 
-        protected override void OnDestroy()
-        {
-            // do nothing - dont trigger base method!
-        }
-
         /*
          * Call this method from other thread to run UI and other stuff on mainthread, will be executed at the end of next frame
          * Use it like -> 
