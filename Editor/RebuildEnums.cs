@@ -1,71 +1,92 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using BitStrap;
+using TinyRoar.Framework;
 using UnityEditor;
 using UnityEngine;
 
 public class RebuildEnums : EditorWindow
 {
+    static string environmentsEnums = "";
+    static string layerEnums = "";
+
     [MenuItem("Tiny Roar/Reload Layer and Environments")]
     public static void ShowWindow()
     {
         MonoBehaviour.print("Reloading Layer and Environments...");
 
         // init
-        string environments = "";
-        string layer = "";
+        environmentsEnums += "public enum GameEnvironment{None,";
+        layerEnums += "public enum Layer{None,";
 
-        Transform tempTransform = null;
-        int childCount = 0;
 
-        environments += "public enum GameEnvironment{None,";
-        layer += "public enum Layer{None,";
+        CreateEnvironmentEnums();
+        CreateLayerEnums();
 
-        // go through Envirounments
-        tempTransform = GameObject.Find("Environment").transform;
-        childCount = tempTransform.childCount;
-
-        for (int i = 0; i < childCount; i++)
-        {
-            environments += tempTransform.GetChild(i).name;
-
-            environments += ",";
-
-            if (i == childCount - 1)
-                environments += "}";
-        }
-
-        // go through Layer
-        tempTransform = GameObject.Find("UI").transform;
-        childCount = tempTransform.childCount;
-
-        for (int i = 0; i < childCount; i++)
-        {
-            layer += tempTransform.GetChild(i).name;
-
-            layer += ",";
-
-            if (i == childCount - 1)
-                layer += "}";
-        }
-
-        MonoBehaviour.print(environments);
-        MonoBehaviour.print(layer);
-
-        // set filepath and write the lines
-        string filePath = Application.dataPath + "/Scripts/Util/" + "GeneratedEnums.cs";
-        MonoBehaviour.print(filePath);
-
-        StreamWriter file = new StreamWriter(filePath);
-        file.WriteLine(environments);
-        file.WriteLine("");
-        file.WriteLine(layer);
-        file.Close();
+        WriteFile();
 
         // Refresh the asset database once we're done.
         AssetDatabase.Refresh();
 
         MonoBehaviour.print("Enum file generated!");
+    }
 
+    private static void CreateEnvironmentEnums()
+    {
+        Transform tempTransform = GameObject.Find("Environment").transform;
+        int childCount = tempTransform.childCount;
+
+        for (int i = 0; i < childCount; i++)
+        {
+            environmentsEnums += tempTransform.GetChild(i).name;
+            environmentsEnums += ",";
+
+            if (i == childCount - 1)
+                environmentsEnums += "}";
+        }
+    }
+
+    private static void CreateLayerEnums()
+    {
+        Transform tempTransform = GameObject.Find("UI").transform;
+        int childCount = tempTransform.childCount;
+
+        for (int i = 0; i < childCount; i++)
+        {
+            if (tempTransform.GetChild(i).GetComponent<LayerConfig>() == null)
+            {
+                // add layerconfig if null
+
+                int componentsCount = tempTransform.GetChild(i).gameObject.GetComponents<MonoBehaviour>().Length;
+                LayerConfig layerConfig = tempTransform.GetChild(i).gameObject.AddComponent<LayerConfig>();
+
+                // move layerconfig to top
+                for (int j = 0; j < componentsCount; j++)
+                {
+                    UnityEditorInternal.ComponentUtility.MoveComponentUp(layerConfig);
+                }
+
+                Debug.Log("Added LayerConfig to " + tempTransform.GetChild(i).name);
+            }
+
+            layerEnums += tempTransform.GetChild(i).name;
+            layerEnums += ",";
+
+            if (i == childCount - 1)
+                layerEnums += "}";
+        }
+    }
+
+    private static void WriteFile()
+    {
+        // set filepath and write the lines
+        string filePath = Application.dataPath + "/Scripts/Util/" + "GeneratedEnums.cs";
+        MonoBehaviour.print(filePath);
+
+        StreamWriter file = new StreamWriter(filePath);
+        file.WriteLine(environmentsEnums);
+        file.WriteLine("");
+        file.WriteLine(layerEnums);
+        file.Close();
     }
 }

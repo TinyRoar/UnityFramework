@@ -18,9 +18,6 @@ public class MakeScreenshots : EditorWindow
 
     };
 
-    private Vector2 _size = new Vector2(1920, 800);
-    private Vector2 _pos = new Vector2(0, 10);
-
     private string filename = "Screenshot";
 
     private float m_LastEditorUpdateTime;
