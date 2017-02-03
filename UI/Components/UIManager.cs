@@ -244,12 +244,14 @@ namespace TinyRoar.Framework
             this._blend.SetActive(false);
         }
 
-        public void HideAll()
+        public void HideAll(Layer exception)
         {
             List<LayerEntry> layerList = LayerManager.Instance.GetAllLayersWithAction(UIAction.Show);
             for (int i = 0; i < layerList.Count; i++)
             {
-                Debug.Log(layerList[i].Layer);
+                if(layerList[i].Layer == exception)
+                    continue;
+
                 this.Switch(layerList[i].Layer, UIAction.Hide);
             }
         }
