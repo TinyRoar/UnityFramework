@@ -28,6 +28,9 @@ namespace TinyRoar.Framework
 
         IEnumerator LevelCoroutine()
         {
+            // Security
+            yield return 0;
+
             float progress = 0;
 
             while (!async.isDone)
