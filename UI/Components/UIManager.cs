@@ -40,7 +40,7 @@ namespace TinyRoar.Framework
             // save all Layer and hide it
             foreach (Transform item in ui)
             {
-                LayerEntry layer = new LayerEntry(item.name, item.gameObject);
+                LayerEntry layer = new LayerEntry(item.name, item.transform.FindChild("Container").gameObject);
                 LayerManager.Instance.AddLayerEntry(layer);
                 Hide(layer.Layer);
             }
@@ -363,6 +363,8 @@ namespace TinyRoar.Framework
                 Debug.LogWarning("Layer named " + layer + " not found");
                 return;
             }
+            if (GameConfig.Instance.Debug)
+                Debug.LogWarning("Show(" + layerEntry.Layer + ")");
             this.Show(layerEntry.GameObject);
         }
 
@@ -373,8 +375,6 @@ namespace TinyRoar.Framework
 
         private void Show(GameObject obj)
         {
-            if (GameConfig.Instance.Debug)
-                Debug.LogWarning("Show(" + obj.name + ")");
             obj.SetActive(true);
         }
 
@@ -388,6 +388,8 @@ namespace TinyRoar.Framework
                 Debug.LogWarning("Layer named " + layer + " not found");
                 return;
             }
+            if (GameConfig.Instance.Debug)
+                Debug.LogWarning("Hide(" + layerEntry.Layer + ")");
             this.Hide(layerEntry.GameObject);
         }
 
@@ -400,8 +402,6 @@ namespace TinyRoar.Framework
         {
             if (!obj.activeSelf)
                 return;
-            if (GameConfig.Instance.Debug && obj != null)
-                Debug.LogWarning("Hide(" + obj.name + ")");
             if (obj == null)
             {
                 Debug.LogWarning("Hide failed -> obj null");
