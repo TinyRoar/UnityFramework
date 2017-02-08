@@ -50,6 +50,24 @@ namespace TinyRoar.Framework
             // set FPS
             Application.targetFrameRate = FPS;
 
+            // show layers
+            ShowLayerEntries();
+
+            if (CloseAtEsc)
+                Inputs.Instance.OnKeyDown += OnKeyDown;
+
+            if (UseViewManager)
+                ViewManager.Instance.Init();
+        }
+
+        /// <summary>
+        /// show some layers by default if needed
+        /// </summary>
+        private void ShowLayerEntries()
+        {
+            if (LayerEntries.Count == 0)
+                return;
+
             // execute next frame
             Updater.Instance.ExecuteNextFrame(delegate
             {
@@ -67,12 +85,6 @@ namespace TinyRoar.Framework
                     UIManager.Instance.Switch(layerEntry.Layer, layerEntry.Action);
                 }
             });
-
-            if (CloseAtEsc)
-                Inputs.Instance.OnKeyDown += OnKeyDown;
-
-            if (UseViewManager)
-                ViewManager.Instance.Init();
         }
 
         private void OnKeyDown()
