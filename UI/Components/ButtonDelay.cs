@@ -10,6 +10,7 @@ namespace TinyRoar.Framework
         private float time = 1.0f;
         [SerializeField]
         private Layer reactToLayer;
+        private UIAction reactToAction;
 
         private Button button
         {
@@ -22,18 +23,18 @@ namespace TinyRoar.Framework
             if(reactToLayer == Layer.None)
                 return;
 
-            //Inputs.Instance.OnLayerChange += LayerChange;
+            Events.Instance.OnLayerChange += LayerChange;
             button = this.GetComponent<Button>();
         }
 
         void OnDestroy()
         {
-            //Inputs.Instance.OnLayerChange -= LayerChange;
+            Events.Instance.OnLayerChange -= LayerChange;
         }
 
-        void LayerChange(Layer oldLayer, Layer newLayer)
+        void LayerChange(Layer layer, UIAction action)
         {
-            if (newLayer == reactToLayer)
+            if (layer == reactToLayer && action == reactToAction)
             {
                 // disable
                 button.interactable = false;

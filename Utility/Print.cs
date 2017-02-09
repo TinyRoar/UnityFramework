@@ -12,6 +12,10 @@ namespace TinyRoar.Framework
 
         public static void Log(string message, Color color, bool bold = false, bool italic = false)
         {
+            // trim if too long
+            if (message.Length > 16200)
+                message = message.Substring(0, 16200);
+
             // make sure to only do coloring in editor
             #if UNITY_EDITOR
             message = AddColorTag(message, color);

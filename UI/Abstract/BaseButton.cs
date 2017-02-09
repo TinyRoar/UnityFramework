@@ -9,9 +9,12 @@ namespace TinyRoar.Framework
     public abstract class BaseButton : MonoBehaviour, IPointerDownHandler
     {
         // Config
-        [SerializeField] private bool UseScrollRect = false;
-        [SerializeField] protected bool MultipleClickable = false;
-        [SerializeField] protected string Sound = "ButtonStandard";
+        [SerializeField]
+        private bool UseScrollRect = false;
+        [SerializeField]
+        protected bool MultipleClickable = false;
+        [SerializeField]
+        protected string Sound = "ButtonStandard";
 
         // internal
         protected Button UIButton;
@@ -25,7 +28,7 @@ namespace TinyRoar.Framework
         void Awake()
         {
             // Get UI Button Component
-            this.UIButton = this.GetComponent<UnityEngine.UI.Button>();
+            this.UIButton = this.GetComponent<Button>();
 
             // Add OnClick Event
             if (!UseScrollRect)
@@ -100,12 +103,9 @@ namespace TinyRoar.Framework
 
         void reclickableCallback()
         {
-            if (this == null)
+            if (this == null || this.UIButton == null)
                 return;
-            if (this.GetComponent<Button>() == null)
-                return;
-
-            this.GetComponent<Button>().interactable = true;
+            this.UIButton.interactable = true;
         }
 
     }

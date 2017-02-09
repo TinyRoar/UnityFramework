@@ -9,7 +9,8 @@ namespace TinyRoar.Framework
         {
             Events.Instance.OnLayerChange -= OnLayerChange;
             Events.Instance.OnLayerChange += OnLayerChange;
-            Debug.Log("ViewManager init");
+            if(InitManager.Instance.Debug)
+                Debug.Log("ViewManager init");
         }
 
         void OnDestroy()
@@ -25,8 +26,9 @@ namespace TinyRoar.Framework
 
             if (layerEntry.View == null)
             {
-                Debug.LogWarning("View" + layer.ToString() + " not found :'(");
-                return;
+                if(InitManager.Instance.Debug)
+                    Debug.LogWarning("View" + layer.ToString() + " not found :'(");
+                    return;
             }
 
             if (action == UIAction.Show)
