@@ -39,7 +39,6 @@ namespace TinyRoar.Framework
 
             // save as xml/binary data
             doSaving = true;
-            //this.Serialize<PairCollection>(typeof(Pair));
         }
 
         public Pair Set(string key, string value)
@@ -99,22 +98,28 @@ namespace TinyRoar.Framework
 
         public int Increase(string key)
         {
-            return (this.Collection as PairCollection).Increase(new Pair(key));
+            int newVal = (this.Collection as PairCollection).Increase(new Pair(key));
+            doSaving = true;
+            return newVal;
         }
 
         public int Increase(Pair pair)
         {
-            return (this.Collection as PairCollection).Increase(pair);
+            int newVal = (this.Collection as PairCollection).Increase(pair);
+            doSaving = true;
+            return newVal;
         }
 
         public void Remove(string key)
         {
             (this.Collection as PairCollection).Remove(new Pair(key));
+            doSaving = true;
         }
 
         public void Remove(Pair pair)
         {
             (this.Collection as PairCollection).Remove(pair);
+            doSaving = true;
         }
 
     }
