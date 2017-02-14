@@ -53,6 +53,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04349ef41345fb24baac216b14a875e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UIName: UI
+  EnvironmentName: Environment
   _blendTime: 0.5
   BaseDelay: 0.5
   _blend: {fileID: 0}
@@ -78,11 +80,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f662d3a50a6563b41977712e5857e281, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SaveMethod: 2
+  SaveMethod: 1
   FPS: 60
-  DefaultGameplayStatus: 0
-  DefaultEnvironment: 0
-  LayerEntries: []
-  Debug: 0
+  DefaultGameplayStatus: 1
+  DefaultEnvironment: 1
+  LayerEntries:
+  - Layer: 10
+    Action: 1
+  Debug: 1
   UseAnalytics: 0
   CloseAtEsc: 0
+  UseViewManager: 0
