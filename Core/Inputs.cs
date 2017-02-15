@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using Amazon.SimpleNotificationService.Model.Internal.MarshallTransformations;
 
 
 namespace TinyRoar.Framework
@@ -35,6 +36,9 @@ namespace TinyRoar.Framework
 
         public Inputs()
         {
+            if (Updater.Instance == null)
+                return;
+
             Updater.Instance.OnUpdate += DoUpdate;
             Updater.Instance.OnLateUpdate += DoLateUpdate;
             _instance = this;
@@ -53,8 +57,18 @@ namespace TinyRoar.Framework
 
         void OnDestroy()
         {
-            Updater.Instance.OnUpdate -= DoUpdate;
-            Updater.Instance.OnUpdate -= DoLateUpdate;
+            try
+            {
+
+                // Event remove
+                Updater.Instance.OnUpdate -= DoUpdate;
+                Updater.Instance.OnUpdate -= DoLateUpdate;
+
+            }
+            catch (System.NullReferenceException e)
+            {
+                // Debug.Log(e);
+            }
         }
 
         void DoUpdate()
@@ -186,7 +200,7 @@ namespace TinyRoar.Framework
                 }
             }
 
-            if(OnTouchMove != null)
+            if (OnTouchMove != null)
             {
                 if (Input.touchCount >= 1 && (Input.GetTouch(0).phase == TouchPhase.Moved || (Input.touchCount >= 2 && Input.GetTouch(1).phase == TouchPhase.Moved)))
                 {
