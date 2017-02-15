@@ -9,19 +9,19 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1938142414287122}
+  m_RootGameObject: {fileID: 1333089543995770}
   m_IsPrefabParent: 1
---- !u!1 &1938142414287122
+--- !u!1 &1333089543995770
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4382368715488814}
-  - component: {fileID: 114863350210597688}
-  - component: {fileID: 114315973966696152}
-  - component: {fileID: 114616642482255114}
+  - component: {fileID: 4661207157054914}
+  - component: {fileID: 114007298798598456}
+  - component: {fileID: 114104596900908024}
+  - component: {fileID: 114396744857133938}
   m_Layer: 0
   m_Name: UnityFramework
   m_TagString: Untagged
@@ -29,12 +29,12 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4382368715488814
+--- !u!4 &4661207157054914
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1938142414287122}
+  m_GameObject: {fileID: 1333089543995770}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -42,15 +42,46 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114315973966696152
+--- !u!114 &114007298798598456
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1938142414287122}
+  m_GameObject: {fileID: 1333089543995770}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04349ef41345fb24baac216b14a875e0, type: 3}
+  m_Script: {fileID: 11500000, guid: adaba6559da75614b85203ec87917b70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SaveMethod: 1
+  FPS: 60
+  DefaultGameplayStatus: 0
+  DefaultEnvironment: 2
+  LayerEntries: []
+  Debug: 0
+  UseAnalytics: 0
+  CloseAtEsc: 0
+  UseViewManager: 0
+--- !u!114 &114104596900908024
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1333089543995770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9396a1b8b757a9047bd06b051b1b2af9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114396744857133938
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1333089543995770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d449bdb7c8f96334187aba22e6e28d53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UIName: UI
@@ -58,36 +89,3 @@ MonoBehaviour:
   _blendTime: 0.5
   BaseDelay: 0.5
   _blend: {fileID: 0}
---- !u!114 &114616642482255114
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1938142414287122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7ecb38784db94b438a2edb95385aad2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114863350210597688
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1938142414287122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f662d3a50a6563b41977712e5857e281, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SaveMethod: 1
-  FPS: 60
-  DefaultGameplayStatus: 1
-  DefaultEnvironment: 1
-  LayerEntries:
-  - Layer: 10
-    Action: 1
-  Debug: 1
-  UseAnalytics: 0
-  CloseAtEsc: 0
-  UseViewManager: 0
