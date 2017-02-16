@@ -37,6 +37,14 @@ namespace TinyRoar.Framework
             // get UI
             Transform ui = GetTransformWithName(UIName);
 
+
+            // enable all Layer and hide all container first!
+            foreach (Transform item in ui)
+            {
+                this.Show(item);
+                this.Hide(item.transform.FindChild("Container").gameObject);
+            }
+
             // save all Layer and hide it
             foreach (Transform item in ui)
             {
