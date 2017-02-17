@@ -65,14 +65,14 @@ namespace TinyRoar.Framework
         /// </summary>
         private void ShowLayerEntries()
         {
-            if (LayerEntries.Count == 0)
-                return;
-
             // execute next frame
             Updater.Instance.ExecuteNextFrame(delegate
             {
                 Events.Instance.GameplayStatus = DefaultGameplayStatus;
                 UIManager.Instance.Switch(DefaultEnvironment, 0);
+
+                if (LayerEntries.Count == 0)
+                    return;
 
                 int count = LayerEntries.Count;
                 for (var i = 0; i < count; i++)

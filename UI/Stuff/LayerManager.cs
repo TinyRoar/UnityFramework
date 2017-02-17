@@ -31,6 +31,18 @@ namespace TinyRoar.Framework
             return null;
         }
 
+        public LayerEntry GetLayerEntry(LayerConfig layerConfig)
+        {
+            for (var i = 0; i < _layerList.Count; i++)
+            {
+                if (_layerList[i].LayerConfig != layerConfig)
+                    continue;
+                return _layerList[i];
+            }
+            Debug.LogWarning("No LayerEntry for Layer " + layerConfig.name + " :'(");
+            return null;
+        }
+
         public bool IsAction(Layer layer, UIAction action)
         {
             for (var i = 0; i < _layerList.Count; i++)

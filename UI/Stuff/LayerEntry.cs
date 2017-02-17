@@ -8,13 +8,13 @@ namespace TinyRoar.Framework
     public class LayerEntry
     {
 
-        public Layer Layer;
+        public Layer Layer{ get; set; }
+        public LayerConfig LayerConfig;
         public UIAction Action;
         public GameObject GameObject { get; set; }
-        public LayerConfig LayerConfig { get; set; }
         public View View { get; set; }
 
-        public LayerEntry(string layerName, GameObject gameObject)
+        public LayerEntry(string layerName, GameObject gameObject, LayerConfig layerConfig)
         {
             var layer = StringToLayer(layerName);
 
@@ -27,7 +27,7 @@ namespace TinyRoar.Framework
             Layer = layer;
             Action = UIAction.Hide;
             GameObject = gameObject;
-            LayerConfig = gameObject.GetComponent<LayerConfig>();
+            LayerConfig = layerConfig;
             View = gameObject.GetComponent<View>();
         }
 

@@ -28,10 +28,16 @@ namespace TinyRoar.Framework
             {
                 LayerEntry layerEntry = ActionList[i];
 
-                if (layerEntry.Layer == Layer.None || layerEntry.Action == UIAction.None)
+                if (layerEntry.LayerConfig == null)
+                {
+                    Debug.LogWarning("LayerConfig is NULL!");
+                    continue;
+                }
+
+                if (layerEntry.Action == UIAction.None)
                     continue;
 
-                UIManager.Instance.Switch(layerEntry.Layer, layerEntry.Action, Delay);
+                UIManager.Instance.Switch(layerEntry.LayerConfig, layerEntry.Action, Delay);
             }
 
             // Play Animations

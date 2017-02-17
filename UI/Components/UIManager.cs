@@ -48,7 +48,7 @@ namespace TinyRoar.Framework
             // save all Layer and hide it
             foreach (Transform item in ui)
             {
-                LayerEntry layer = new LayerEntry(item.name, item.transform.FindChild("Container").gameObject);
+                LayerEntry layer = new LayerEntry(item.name, item.transform.FindChild("Container").gameObject, item.transform.GetComponent<LayerConfig>());
                 LayerManager.Instance.AddLayerEntry(layer);
                 Hide(layer.Layer);
             }
@@ -183,6 +183,11 @@ namespace TinyRoar.Framework
                     AddHideLayerList(layer);
                 }
             }
+        }
+
+        public void Switch(LayerConfig layerConfig, UIAction action = UIAction.Show, float delay = -1)
+        {
+            Switch(LayerManager.Instance.GetLayerEntry(layerConfig).Layer, action, delay);
         }
 
         private void AddHideLayerList(Layer layer)
