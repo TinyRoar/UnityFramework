@@ -64,12 +64,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f662d3a50a6563b41977712e5857e281, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SaveMethod: 2
-  FPS: 60
+  SaveMethod: 1
+  FPS: 30
   DefaultGameplayStatus: 0
   DefaultEnvironment: 0
   LayerEntries: []
-  Debug: 0
+  Debug: 1
   UseAnalytics: 0
   CloseAtEsc: 0
   UseViewManager: 0

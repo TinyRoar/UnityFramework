@@ -34,6 +34,18 @@ namespace TinyRoar.Framework
             // init
             _environmentList = new Dictionary<GameEnvironment, Transform>();
 
+            SetupLayer();
+
+            SetupEnvironment();
+
+        }
+
+        /// <summary>
+        /// initialize List with all UI Layers
+        /// </summary>
+        private void SetupLayer()
+        {
+
             // get UI
             Transform ui = GetTransformWithName(UIName);
 
@@ -53,16 +65,32 @@ namespace TinyRoar.Framework
                 Hide(layer.Layer);
             }
 
+        }
+
+        /// <summary>
+        ///  initialize list with all GameObject Environments
+        /// </summary>
+        private void SetupEnvironment()
+        {
+
             // get Environments
             Transform env = GetTransformWithName(EnvironmentName);
+
+
+            // enable all Layer and hide all container first!
+            foreach (Transform item in env)
+            {
+                this.Show(item);
+                this.Hide(item.transform.FindChild("Container").gameObject);
+            }
 
             // save all Environment and hide it
             foreach (Transform item in env)
             {
-                GameEnvironment envKey = GameEnvironment.None;
-                envKey = (GameEnvironment) Enum.Parse(typeof (GameEnvironment), item.name);
-                Hide(item);
-                _environmentList.Add(envKey, item);
+                GameEnvironment envKey = (GameEnvironment)Enum.Parse(typeof(GameEnvironment), item.name);
+                Transform item2 = item.FindChild("Container");
+                Hide(item2);
+                _environmentList.Add(envKey, item2);
             }
 
         }

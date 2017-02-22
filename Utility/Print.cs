@@ -7,7 +7,7 @@ namespace TinyRoar.Framework
     {
         public static void Log(string message)
         {
-            Debug.Log(message);
+            Log(message, Color.magenta);
         }
 
         public static void Log(string message, Color color, bool bold = false, bool italic = false)
