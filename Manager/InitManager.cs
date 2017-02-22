@@ -41,6 +41,9 @@ namespace TinyRoar.Framework
 
             MainThread = System.Threading.Thread.CurrentThread;
 
+            // initialize Encrypt once to prevent first usage is not on main thread / deviceID would throw exception
+            new Encrypt();
+
         }
 
         void Start()

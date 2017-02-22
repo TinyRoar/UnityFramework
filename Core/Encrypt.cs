@@ -21,6 +21,8 @@ namespace TinyRoar.Framework
 
             this.Key = ASCIIEncoding.UTF8.GetBytes(sKey.Substring(0, 32));
             this.IV = ASCIIEncoding.UTF8.GetBytes(sKey.Substring(0, 16));
+
+            _instance = this;
         }
 
         public byte[] EncryptStringToBytes(string plainText)
