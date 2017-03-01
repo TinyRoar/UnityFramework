@@ -6,16 +6,26 @@ using UnityEngine.UI;
 
 namespace TinyRoar.Framework
 {
-    [RequireComponent(typeof (Button))]
+    [RequireComponent(typeof(Button))]
     public class OpenCloseButton : BaseButton
     {
-        // config
+        [Header("Actions")]
         public bool ExitGame = false;
+
+        [Header("Environment")]
         public GameEnvironment Environment;
+
+        [Header("Layer")]
         public bool UseBlend;
         public float Delay;
         public List<LayerEntry> ActionList;
         public List<AnimationConfig> Animations;
+
+        [Header("Gameplay Status")]
+        [SerializeField]
+        private GameplayStatus GameplayStatus;
+        [SerializeField]
+        private GameplayStatus OrToggleWithStatus;
 
         // action
         protected override void ButtonAction()
@@ -57,6 +67,15 @@ namespace TinyRoar.Framework
             if (UseBlend)
             {
                 UIManager.Instance.DoBlende();
+            }
+
+            // GameplayStatus
+            if (GameplayStatus != GameplayStatus.None)
+            {
+                if (Events.Instance.GameplayStatus == GameplayStatus)
+                    Events.Instance.GameplayStatus = OrToggleWithStatus;
+                else
+                    Events.Instance.GameplayStatus = GameplayStatus;
             }
 
         }
