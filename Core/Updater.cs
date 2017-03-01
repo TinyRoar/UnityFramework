@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 
 namespace TinyRoar.Framework
 {
@@ -61,9 +61,13 @@ namespace TinyRoar.Framework
             if (NextFrameList.Count == 0)
                 return;
 
-            foreach (var method in NextFrameList)
+            for (int i = NextFrameList.ToList().Count - 1; i >= 0; i--)
+            {
+                var method = NextFrameList[i];
                 if (method != null)
                     method();
+                NextFrameList.RemoveAt(i);
+            }
 
             //print(NextFrameList.Count);
             NextFrameList.Clear();
