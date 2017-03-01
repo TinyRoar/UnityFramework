@@ -347,7 +347,7 @@ namespace TinyRoar.Framework
                     return;
                 }
                 LayerConfig UIConfig = layerEntry.LayerConfig;
-                if (UIConfig != null && _delay != 0)
+                if (UIConfig != null)
                 {
                     // play each animation
                     foreach (var anim in UIConfig.CloseAnimations)
