@@ -6,25 +6,33 @@ using System.Linq;
 
 /*
  * TIMER
-
- * About: (c) 2015 by Tiny Roar | Dario D. Müller
- * Desc: Timer is threaded and event is fired next frame in Update method
- *
- * 1. Create an event which will be notified by the timer
- *   - void EndTimerEvent() {}
- * 2. Call Timer with:
- *   - Timer.Instance.Add(1.0f, EndTimerEvent);
+ * About: (c) 2015 by Tiny Roar | Dario D.Müller
+ * Desc: Timer is threaded and event is fired in the next frame in Unity's Update loop
+ * Usage: Timer.Instance.Add(1.0f, () => { Debug.Log("Timer ended"); });
  */
-
 namespace TinyRoar.Framework
 {
     public class Timer : Singleton<Timer>
     {
-        // internal
+        /// <summary>
+        /// list with timer-actions
+        /// </summary>
         private Dictionary<int, Action> _endTimer { get; set; }
+
+        /// <summary>
+        /// internal id for identifying the timer
+        /// </summary>
         private int nextTimerId;
-        private static bool isUpdate = false;
-        private static List<int> expiredIndexList = new List<int>();
+
+        /// <summary>
+        /// flag if a nextFrame Update is signedIn
+        /// </summary>
+        private static bool isUpdate;
+
+        /// <summary>
+        /// list of index-of-actions which timer is ended and should be fired in next frame
+        /// </summary>
+        private static List<int> expiredIndexList;
 
         /// <summary>
         /// Constructor
@@ -32,10 +40,12 @@ namespace TinyRoar.Framework
         public Timer()
         {
             _endTimer = new Dictionary<int, Action>();
+            isUpdate = false;
+            expiredIndexList = new List<int>();
         }
 
         /// <summary>
-        /// Add and start a new Timer
+        /// Start a new Timer
         /// </summary>
         /// <param name="time">Time in seconds</param>
         /// <param name="endEvent">delegate event that should be called after timer is over</param>
@@ -52,7 +62,7 @@ namespace TinyRoar.Framework
             this._endTimer.Add(nextTimerId, endEvent);
 
             // Setup timer
-            System.Timers.Timer aTimer = new System.Timers.Timer(time*1000);
+            System.Timers.Timer aTimer = new System.Timers.Timer(time * 1000);
             int timerID = new Int32();
             timerID = nextTimerId;
             aTimer.Elapsed += (sender, args) => KeepAliveElapsed(sender, timerID);
@@ -63,9 +73,9 @@ namespace TinyRoar.Framework
         }
 
         /// <summary>
-        /// Stop/Cancel the timer by giving it's timerID
+        /// Stop the timer by giving it's timerID
         /// </summary>
-        /// <param name="timerID"></param>
+        /// <param name="timerID">timerID that was returned after Add() method</param>
         /// <returns>Status if timer was stopped or not</returns>
         public bool Stop(int timerID)
         {
@@ -84,11 +94,12 @@ namespace TinyRoar.Framework
         public static void KeepAliveElapsed(object source, int timerIndex)
         {
             // stop timer
-            ((System.Timers.Timer) source).Stop();
+            ((System.Timers.Timer)source).Stop();
 
             // add index to list of expired timer
             expiredIndexList.Add(timerIndex);
 
+            // check is update-method is not already signed in
             if (isUpdate)
                 return;
 
@@ -112,10 +123,13 @@ namespace TinyRoar.Framework
                 // get action
                 Action action = null;
                 Timer.Instance._endTimer.TryGetValue(timerIndex, out action);
+
+                // check is action is valid
                 if (action != null)
                 {
                     // exec TimerEnd event
                     action();
+
                     // insert into list
                     Timer.Instance._endTimer.Remove(timerIndex);
                 }
