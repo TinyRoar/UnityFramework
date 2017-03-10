@@ -14,11 +14,14 @@ namespace TinyRoar.Framework
         [SerializeField]
         private string EnvironmentName = "Environment";
 
-        [SerializeField] private float _blendTime = 0.5f;
-        [SerializeField] private float BaseDelay = 0.5f;
+        [SerializeField]
+        private float _blendTime = 0.5f;
+        [SerializeField]
+        private float BaseDelay = 0.5f;
         private float _delay = 0.5f;
 
-        [SerializeField] private GameObject _blend;
+        [SerializeField]
+        private GameObject _blend;
 
         public GameEnvironment ActiveEnvironment { get; private set; }
         private GameEnvironment _endTimerEnvironment;
@@ -29,15 +32,54 @@ namespace TinyRoar.Framework
             return _environmentList[env];
         }
 
+        public override void Awake()
+        {
+            base.Awake();
+
+            // this makes sure all views and mediators get registered by strangeIOC before start
+            PreSetupLayer();
+            PreSetupEnvironment();
+        }
+
         public void Init()
         {
             // init
             _environmentList = new Dictionary<GameEnvironment, Transform>();
 
             SetupLayer();
-
             SetupEnvironment();
+        }
 
+        /// <summary>
+        /// preinitialize List with all UI Layers
+        /// </summary>
+        private void PreSetupLayer()
+        {
+            // get UI
+            Transform ui = GetTransformWithName(UIName);
+
+            // enable all Layer and all container first!
+            foreach (Transform item in ui)
+            {
+                this.Show(item);
+                this.Show(item.transform.FindChild("Container"));
+            }
+        }
+
+        /// <summary>
+        ///  preinitialize list with all GameObject Environments
+        /// </summary>
+        private void PreSetupEnvironment()
+        {
+            // get Environments
+            Transform env = GetTransformWithName(EnvironmentName);
+
+            // enable all Layer and hide all container first!
+            foreach (Transform item in env)
+            {
+                this.Show(item);
+                this.Show(item.transform.FindChild("Container"));
+            }
         }
 
         /// <summary>
@@ -45,17 +87,8 @@ namespace TinyRoar.Framework
         /// </summary>
         private void SetupLayer()
         {
-
             // get UI
             Transform ui = GetTransformWithName(UIName);
-
-
-            // enable all Layer and hide all container first!
-            foreach (Transform item in ui)
-            {
-                this.Show(item);
-                this.Hide(item.transform.FindChild("Container").gameObject);
-            }
 
             // save all Layer and hide it
             foreach (Transform item in ui)
@@ -64,7 +97,6 @@ namespace TinyRoar.Framework
                 LayerManager.Instance.AddLayerEntry(layer);
                 Hide(layer.Layer);
             }
-
         }
 
         /// <summary>
@@ -72,17 +104,8 @@ namespace TinyRoar.Framework
         /// </summary>
         private void SetupEnvironment()
         {
-
             // get Environments
             Transform env = GetTransformWithName(EnvironmentName);
-
-
-            // enable all Layer and hide all container first!
-            foreach (Transform item in env)
-            {
-                this.Show(item);
-                this.Hide(item.transform.FindChild("Container").gameObject);
-            }
 
             // save all Environment and hide it
             foreach (Transform item in env)
@@ -92,7 +115,6 @@ namespace TinyRoar.Framework
                 Hide(item2);
                 _environmentList.Add(envKey, item2);
             }
-
         }
 
         private Transform GetTransformWithName(string name)
@@ -266,7 +288,7 @@ namespace TinyRoar.Framework
                 return;
             }
 
-            float blendDelay = _delay - _blendTime/2;
+            float blendDelay = _delay - _blendTime / 2;
             if (blendDelay > 0)
                 Timer.Instance.Add(blendDelay, TimerEndBlende);
             else
@@ -290,7 +312,7 @@ namespace TinyRoar.Framework
             List<LayerEntry> layerList = LayerManager.Instance.GetAllLayersWithAction(UIAction.Show);
             for (int i = 0; i < layerList.Count; i++)
             {
-                if(layerList[i].Layer == exception)
+                if (layerList[i].Layer == exception)
                     continue;
 
                 this.Switch(layerList[i].Layer, UIAction.Hide);
