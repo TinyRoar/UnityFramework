@@ -8,15 +8,20 @@ namespace TinyRoar.Framework
 {
     public class InitManager : MonoSingleton<InitManager>
     {
-        [SerializeField] private SaveMethod SaveMethod = SaveMethod.BinaryCrypt;
+        [SerializeField]
+        private SaveMethod SaveMethod = SaveMethod.BinaryCrypt;
 
-        [SerializeField] private int FPS = 60;
+        [SerializeField]
+        private int FPS = 60;
 
-        [SerializeField] private GameplayStatus DefaultGameplayStatus = GameplayStatus.None;
+        [SerializeField]
+        private GameplayStatus DefaultGameplayStatus = GameplayStatus.None;
 
-        [SerializeField] private GameEnvironment DefaultEnvironment;
+        [SerializeField]
+        private GameEnvironment DefaultEnvironment;
 
-        [SerializeField] public List<LayerEntry> LayerEntries;
+        [SerializeField]
+        public List<LayerEntry> LayerEntries;
 
         public bool Debug = false;
 
@@ -82,10 +87,10 @@ namespace TinyRoar.Framework
                 {
                     LayerEntry layerEntry = LayerEntries[i];
 
-                    if (layerEntry.Layer == Layer.None || layerEntry.Action == UIAction.None)
+                    if (layerEntry.LayerConfig == null || layerEntry.Action == UIAction.None)
                         continue;
 
-                    UIManager.Instance.Switch(layerEntry.Layer, layerEntry.Action);
+                    UIManager.Instance.Switch(layerEntry.LayerConfig, layerEntry.Action);
                 }
             });
         }

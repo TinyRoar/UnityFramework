@@ -62,6 +62,11 @@ namespace TinyRoar.Framework
             foreach (Transform item in ui)
             {
                 this.Show(item);
+                if (item.transform.FindChild("Container") == null)
+                {
+                    Debug.LogWarning("Error! UI '" + item + "' hasn't got a 'container'");
+                    continue;
+                }
                 this.Show(item.transform.FindChild("Container"));
             }
         }
@@ -78,6 +83,11 @@ namespace TinyRoar.Framework
             foreach (Transform item in env)
             {
                 this.Show(item);
+                if (item.transform.FindChild("Container") == null)
+                {
+                    Debug.LogWarning("Error! Environment '"+ item + "' hasn't got a 'container'");
+                    continue;
+                }
                 this.Show(item.transform.FindChild("Container"));
             }
         }
@@ -433,11 +443,21 @@ namespace TinyRoar.Framework
 
         private void Show(Transform obj)
         {
+            if (obj == null)
+            {
+                Debug.LogWarning("Show failed -> obj null");
+                return;
+            }
             Show(obj.gameObject);
         }
 
         private void Show(GameObject obj)
         {
+            if (obj == null)
+            {
+                Debug.LogWarning("Show failed -> obj null");
+                return;
+            }
             obj.SetActive(true);
         }
 
@@ -458,6 +478,11 @@ namespace TinyRoar.Framework
 
         private void Hide(Transform obj)
         {
+            if (obj == null)
+            {
+                Debug.LogWarning("Hide failed -> obj null");
+                return;
+            }
             Hide(obj.gameObject);
         }
 
