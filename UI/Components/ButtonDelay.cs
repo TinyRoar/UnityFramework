@@ -10,6 +10,7 @@ namespace TinyRoar.Framework
         private float time = 1.0f;
         [SerializeField]
         private Layer reactToLayer;
+        [SerializeField]
         private UIAction reactToAction;
 
         private Button button

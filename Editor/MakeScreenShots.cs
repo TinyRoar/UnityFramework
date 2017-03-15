@@ -31,7 +31,7 @@ public class MakeScreenshots : EditorWindow
     [MenuItem("Tiny Roar/Screenshooter...")]
     static void Init()
     {
-        MakeScreenshots window = (MakeScreenshots)(EditorWindow.GetWindow(typeof(MakeScreenshots)));
+        //MakeScreenshots window = (MakeScreenshots)(EditorWindow.GetWindow(typeof(MakeScreenshots)));
     } // Init()
 
     public static EditorWindow GetMainGameView()

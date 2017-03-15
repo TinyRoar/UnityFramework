@@ -38,7 +38,7 @@ namespace TinyRoar.Framework
                 return (Layer) Enum.Parse(typeof (Layer), layerName);
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Debug.LogWarning("Layer " + layerName + " not set in ENUM");
             }

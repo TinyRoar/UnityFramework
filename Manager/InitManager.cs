@@ -101,14 +101,13 @@ namespace TinyRoar.Framework
                 Application.Quit();
         }
 
-        void OnApplicationQuit()
-        {
+        //void OnApplicationQuit()
+        //{
             // Does it work to do in BaseManagement instead of here?
             //DataManagement.Instance.ForceSaving();
             //TileManagement.Instance.ForceSaving();
             //GroveManagement.Instance.ForceSaving();
-
-        }
+        //}
 
     }
 }

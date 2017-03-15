@@ -63,8 +63,9 @@ namespace TinyRoar.Framework
             {
                 Updater.Instance.OnUpdate -= UpdateTimer;
             }
-            catch (NullReferenceException e)
+            catch (Exception)
             {
+                // ignored
             }
         }
 

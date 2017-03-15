@@ -64,9 +64,8 @@ namespace TinyRoar.Framework
                 Updater.Instance.OnUpdate -= DoLateUpdate;
 
             }
-            catch (System.NullReferenceException e)
+            catch (System.NullReferenceException)
             {
-                // Debug.Log(e);
             }
         }
 
