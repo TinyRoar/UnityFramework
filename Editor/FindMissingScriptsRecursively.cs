@@ -4,7 +4,7 @@ public class FindMissingScriptsRecursively : EditorWindow
 {
     static int go_count = 0, components_count = 0, missing_count = 0;
 
-    [MenuItem("Tiny Roar/FindMissingScriptsRecursively")]
+    [MenuItem("Tiny Roar/References/FindMissingScriptsRecursively")]
     public static void ShowWindow()
     {
         EditorWindow.GetWindow(typeof(FindMissingScriptsRecursively));
