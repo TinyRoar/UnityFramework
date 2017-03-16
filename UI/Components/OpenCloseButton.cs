@@ -11,6 +11,7 @@ namespace TinyRoar.Framework
     {
         [Header("Actions")]
         public bool ExitGame = false;
+        public bool BackButtonReacts = false;
 
         [Header("Environment")]
         public GameEnvironment Environment;
@@ -77,8 +78,14 @@ namespace TinyRoar.Framework
                 else
                     Events.Instance.GameplayStatus = GameplayStatus;
             }
-
         }
 
+        void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.Escape) && BackButtonReacts)
+                ButtonAction();
+        }
     }
+
+
 }
