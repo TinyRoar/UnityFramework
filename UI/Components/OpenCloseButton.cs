@@ -82,8 +82,8 @@ namespace TinyRoar.Framework
 
         void Update()
         {
-            if(Input.GetKeyDown(KeyCode.Escape) && BackButtonReacts)
-                ButtonAction();
+            if (Input.GetKeyDown(KeyCode.Escape) && BackButtonReacts)
+                GetComponent<Button>().onClick.Invoke();
         }
     }
 
