@@ -227,15 +227,15 @@ namespace TinyRoar.Framework
             if (action == UIAction.Hide)
             {
                 // Do CloseAnimation already open Layer
-                DoAnimation(layer);
+                DoAnimation(layer, _delay);
             }
             else if (action == UIAction.Show)
             {
                 // Delayed or not
-                if (delay == 0 || LayerManager.Instance.IsNothingVisible())
+                if (_delay == 0 || LayerManager.Instance.IsNothingVisible())
                 {
                     // set layer immediately
-                    DoAnimation(layer);
+                    DoAnimation(layer, _delay);
                 }
                 else
                 {
@@ -281,7 +281,7 @@ namespace TinyRoar.Framework
                 }
                 else
                 {
-                    DoAnimation(layer);
+                    DoAnimation(layer, -1);
                 }
             }
 
@@ -331,7 +331,7 @@ namespace TinyRoar.Framework
 
         // Animation
 
-        private void DoAnimation(Layer layer)
+        private void DoAnimation(Layer layer, float delay)
         {
             UIAction action = LayerManager.Instance.GetToggledStatus(layer);
 
@@ -396,15 +396,16 @@ namespace TinyRoar.Framework
                 }
 
                 // save for delayed animation
-                /*if (isAnimation == false)
-            {
-                this.Hide(layer);
-                LayerManager.SetAction(layer, action);
-            }
-            else
-            {*/
-                AddHideLayerList(layer);
-                //}
+                //if (isAnimation == false)
+                if(delay == 0)
+                {
+                    this.Hide(layer);
+                    LayerManager.Instance.SetAction(layer, action);
+                }
+                else
+                {
+                    AddHideLayerList(layer);
+                }
             }
         }
 
