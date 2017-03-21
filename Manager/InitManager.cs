@@ -38,6 +38,10 @@ namespace TinyRoar.Framework
         {
             base.Awake();
 
+            // set FPS + disable vsync
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = FPS;
+
             // set encrytion method
             if (SaveMethod != SaveMethod.None)
             {
@@ -48,15 +52,13 @@ namespace TinyRoar.Framework
 
             // initialize Encrypt once to prevent first usage is not on main thread / deviceID would throw exception
             new Encrypt();
-
         }
 
         void Start()
         {
             UIManager.Instance.Init();
 
-            // set FPS
-            Application.targetFrameRate = FPS;
+
 
             // show layers
             ShowLayerEntries();
