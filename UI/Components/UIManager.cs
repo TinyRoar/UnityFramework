@@ -231,6 +231,10 @@ namespace TinyRoar.Framework
             }
             else if (action == UIAction.Show)
             {
+                // check if layer is in hideLayerList for waiting
+                if (_hideLayerList.Contains(layer))
+                    _hideLayerList.Remove(layer);
+
                 // Delayed or not
                 if (_delay == 0 || LayerManager.Instance.IsNothingVisible())
                 {
