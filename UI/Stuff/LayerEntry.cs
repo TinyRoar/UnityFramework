@@ -28,7 +28,7 @@ namespace TinyRoar.Framework
             Action = UIAction.Hide;
             GameObject = gameObject;
             LayerConfig = layerConfig;
-            View = gameObject.GetComponent<View>();
+            View = gameObject.transform.parent.GetComponent<View>();
         }
 
         public static Layer StringToLayer(string layerName)
