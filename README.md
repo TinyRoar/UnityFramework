@@ -1,9 +1,8 @@
 # UnityFramework
-Simple C# Codebase as Template for Unity3D Projects
 
+Tiny Roar's Unity Framework is a small series of classes that assists you in rapid game development with Unity3D engine.
 
-(c) 2015 - 2017 by Tiny Roar
-Contributor:
+(c) 2015 - 2017 by:
 
 * [Dario D. Müller](https://github.com/DarioDomiDE)
 * [Sebasian Sacher](https://github.com/ip0p)
@@ -13,8 +12,8 @@ www.tinyroar-games.com
 contains classes:
 
 	Components
-		- FpsCounter
 		- SoundManager
+		- InitManager
 	Core
 		- Encrypt
 		- Events
@@ -31,8 +30,12 @@ contains classes:
 			- BaseManagement
 			- DataManagement
 		- DataStorage
-	Manager
-		- InitManager
+	Editor
+		- FindMissingScriptsRecursively
+		- MakeScreenShots
+		- MissingReferencesFinder
+		- RebuildEnums
+		- RemoveEmptyFolders
 	Math
 		Random
 			- IRandomGenerator
@@ -48,15 +51,17 @@ contains classes:
 			- BaseButton
 			- BaseCounter
 			- Scrollable
+			- View
 		Cam
 			- CamConfig
 			- CamMovement
 			- CamZoom
 			- ICam
 		Components
+			- AudioAnimationEvent
 			- ButtonDelay
+			- EmptyButton
 			- FpsCounter
-			- GameplayButton
 			- HideMeAnimationEvent
 			- LayerConfig
 			- LevelLoader
@@ -68,9 +73,13 @@ contains classes:
 			- LayerEntry
 			- LayerManager
 			- SortingLayerExposer
+			- ViewManager
 	Utility
+		Print
+			- Print.dll
 		- CodeHelper
 		- DontDestroyOnLoad
+		- FrameworkEnum
 		- GameConfig
 		- MonoSingleton
 		- Singleton
