@@ -265,12 +265,5 @@ namespace TinyRoar.Framework
         {
             DoSaving();
         }
-
-        void OnApplicationQuit()
-        {
-            // Does this work or is it too late?
-            this.ForceSaving();
-        }
-
     }
 }
