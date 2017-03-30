@@ -69,11 +69,15 @@ namespace TinyRoar.Framework
                 if (_doSaving == value)
                     return;
                 _doSaving = value;
-                Updater.Instance.OnLateUpdate -= SaveEndOfFrame;
+
+                if (Updater.Instance != null)
+                    Updater.Instance.OnLateUpdate -= SaveEndOfFrame;
+
                 if (_doSaving)
                 {
                     time = Time.time;
-                    Updater.Instance.OnLateUpdate += SaveEndOfFrame;
+                    if(Updater.Instance != null)
+                        Updater.Instance.OnLateUpdate += SaveEndOfFrame;
                 }
             }
         }
@@ -106,10 +110,12 @@ namespace TinyRoar.Framework
 
             // disable LateUpdate
             _doSaving = false;
-            Updater.Instance.OnLateUpdate -= SaveEndOfFrame;
 
-            // save
-            switch (Management)
+            if (Updater.Instance != null)
+                Updater.Instance.OnLateUpdate -= SaveEndOfFrame;
+
+                // save
+                switch (Management)
             {
                 case ManagementType.Pair:
                     this.Serialize<PairCollection>(typeof(Pair));
