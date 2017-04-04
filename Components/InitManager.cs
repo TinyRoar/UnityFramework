@@ -48,15 +48,23 @@ namespace TinyRoar.Framework
                 GameConfig.Instance.UseSaveMethod = SaveMethod;
             }
 
-            MainThread = System.Threading.Thread.CurrentThread;
+            // if android set to binary crypt because xml is not working at the moment on android
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                GameConfig.Instance.UseSaveMethod = SaveMethod.BinaryCrypt;
+            }
+
+                MainThread = System.Threading.Thread.CurrentThread;
 
             // initialize Encrypt once to prevent first usage is not on main thread / deviceID would throw exception
             new Encrypt();
+
+            UIManager.Instance.Init();
+
         }
 
         void Start()
         {
-            UIManager.Instance.Init();
 
 
 
