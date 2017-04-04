@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class DeleteSavegame : EditorWindow
 {
-    static string environmentsEnums = "";
-    static string layerEnums = "";
-
     [MenuItem("Tiny Roar/Delete Savegame")]
     public static void ShowWindow()
     {
