@@ -122,7 +122,8 @@ namespace TinyRoar.Framework
                     break;
             }
 
-            Debug.Log("Save " + Management);
+            if(InitManager.Instance.Debug)
+                Debug.LogWarning("Save " + Management);
 
         }
 
