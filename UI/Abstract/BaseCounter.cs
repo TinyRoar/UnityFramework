@@ -51,7 +51,7 @@ namespace TinyRoar.Framework
             _isEnabled = false;
         }
 
-        public override void Awake()
+        protected override void Awake()
         {
             base.Awake();
             Init();

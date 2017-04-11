@@ -32,7 +32,7 @@ namespace TinyRoar.Framework
             return _environmentList[env];
         }
 
-        public override void Awake()
+        protected override void Awake()
         {
             base.Awake();
 

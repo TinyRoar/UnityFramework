@@ -50,7 +50,7 @@ namespace TinyRoar.Framework
         /// <summary>
         /// Initialisation
         /// </summary>
-        public virtual void Awake ()
+        protected virtual void Awake ()
         {
 	        if (_instance == null)
                 _instance = this as T;

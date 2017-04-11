@@ -33,8 +33,7 @@ namespace TinyRoar.Framework
 
         public bool UseViewManager;
 
-
-        public override void Awake()
+        protected override void Awake()
         {
             base.Awake();
 
