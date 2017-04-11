@@ -82,7 +82,7 @@ namespace TinyRoar.Framework
         void DoUpdate()
         {
             // mouse wheel zoom
-            float newSize = Mathf.Clamp(orthographicSize - (Input.GetAxis("Mouse ScrollWheel")*2), Size.x, Size.y);
+            float newSize = Mathf.Clamp(orthographicSize - (Input.GetAxis("Mouse ScrollWheel")*40*ZoomSpeed), Size.x, Size.y);
 
             // set
             UpdateCamZoom(newSize);

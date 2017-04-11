@@ -32,7 +32,10 @@ namespace TinyRoar.Framework
         protected override void ButtonAction()
         {
             if (ExitGame)
+            {
+                Debug.LogError("Game Quit!");
                 Application.Quit();
+            }
 
             int count = ActionList.Count;
             for (var i = 0; i < count; i++)
