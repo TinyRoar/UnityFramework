@@ -13,12 +13,16 @@ public sealed class OrbManager : MonoSingleton<OrbManager>
         _objectPool = ObjectPool.Instance;
     }
 
-    public Orb SpawnOrb(Vector3 startPos, Vector3 targetPos)
+    public Orb SpawnOrb(Vector3 startPos, Vector3 targetPos, float randomPos)
     {
         // randomize spawn position
-        //position += (Vector3) Random.insideUnitCircle * 4;
+        if (randomPos != 0)
+        {
+            startPos += (Vector3)Random.insideUnitCircle * randomPos;
+            startPos.z = 0;
+        }
 
-        GameObject obj = _objectPool.GetInactiveObject("Orb", startPos);
+        GameObject obj = _objectPool.GetInactiveObject("Orb");
 
         if (obj == null)
         {

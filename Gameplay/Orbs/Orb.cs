@@ -13,40 +13,69 @@ public class Orb : MonoBehaviour
     [SerializeField]
     private float force = 100;
 
+    /// <summary>
+    /// fly directly to goal or stay nearby startPos and react on Click/Tap
+    /// </summary>
+    [SerializeField]
+    private bool flyDirectlyToGoal = false;
+
+    [SerializeField]
+    private float startFlyingAfterSeconds = 10.0f;
+
+    [SerializeField]
+    private bool useTrailRenderer = true;
+
     public Vector3 targetPos { get; set; }
 
     public Vector3 startPos { get; set; }
 
+    private bool FlyToGoal
+    {
+        get
+        {
+            return _flyToGoal;
+        }
+        set {
+            _flyToGoal = value;
+            if(value && useTrailRenderer)
+                trailRenderer.enabled = true;
+        }
+    }
+
     private Rigidbody2D rigid;
     private TrailRenderer trailRenderer;
-    private float forcex;
-    private float forcey;
     private Vector3 dir;
-
-    private bool tapped = false;
+    private bool _flyToGoal = false;
     private InitManager _initManager;
 
-    void Awake()
+    void Start()
     {
         this._initManager = InitManager.Instance;
     }
 
     void OnEnable()
     {
+        Print.Log("Orb OnEnable");
         if (rigid == null)
         {
             rigid = GetComponent<Rigidbody2D>();
         }
-        if (trailRenderer == null)
+        if (useTrailRenderer && trailRenderer == null)
         {
             trailRenderer = GetComponent<TrailRenderer>();
             trailRenderer.enabled = false;
         }
 
         dir = Vector3.zero;
-        tapped = false;
+        _flyToGoal = false;
         rigid.velocity = Vector3.zero;
         force = startForce;
+
+        // set/reset position
+        this.transform.position = startPos;
+        var localPos = this.GetComponent<RectTransform>().localPosition;
+        localPos.z = 0;
+        this.GetComponent<RectTransform>().localPosition = localPos;
 
         Vector3 rand = Quaternion.Euler(0,0,RandomGenerator.Instance.Range(0,361)) * Vector3.right * force;
         Timer.Instance.Add(0.1f, delegate
@@ -54,24 +83,27 @@ public class Orb : MonoBehaviour
             rigid.AddForce(rand, ForceMode2D.Impulse);
         });
 
-        Timer.Instance.Add(10f, delegate
+        if (flyDirectlyToGoal)
         {
-            tapped = true;
-        });
-
-        Timer.Instance.Add(1f, () => trailRenderer.enabled = true);
+            FlyToGoal = true;
+        }
+        else
+        {
+            Timer.Instance.Add(this.startFlyingAfterSeconds, () => _flyToGoal = true);
+        }
 
         InvokeRepeating("MoveToRandomDir", 1f, 1f);
     }
 
     void OnDisable()
     {
-        trailRenderer.enabled = false;
+        if(useTrailRenderer)
+            trailRenderer.enabled = false;
     }
 
     void Update()
     {
-        if (tapped)
+        if (_flyToGoal)
         {
             dir = (targetPos - transform.position).normalized;
             force += 2;
@@ -106,14 +138,14 @@ public class Orb : MonoBehaviour
     public void OnMouseDown()
     {
         rigid.velocity = Vector3.zero;
-        tapped = true;
+        FlyToGoal = true;
     }
 
 
     public void OnMouseOver()
     {
         rigid.velocity = Vector3.zero;
-        tapped = true;
+        FlyToGoal = true;
     }
 
     void MoveToRandomDir()

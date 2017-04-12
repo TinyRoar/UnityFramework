@@ -15,20 +15,30 @@ public class ObjectPool : MonoSingleton<ObjectPool>
     public List<GameObject> prefabs;
     [SerializeField]
     private Transform Container;
+    [SerializeField]
+    private bool FillPoolInConstructor = true;
 
-    private List<GameObject> pool;
-    private bool poolReady = false;
+    private List<GameObject> _pool;
+    private bool _poolReady = false;
 
     protected override void Awake()
     {
-        FillPool();
+        if(FillPoolInConstructor)
+            FillPool();
     }
 
     public void FillPool()
     {
-        pool = new List<GameObject>();
+        if (_poolReady)
+        {
+            Debug.LogWarning("Pool already filled :'(");
+            return;
+        }
 
-        for (var i = 0; i < prefabs.Count; i++)
+        _pool = new List<GameObject>();
+
+        var count = prefabs.Count;
+        for (var i = 0; i < count; i++)
         {
             for (var o = 0; o < objectsCount; o++)
             {
@@ -36,15 +46,15 @@ public class ObjectPool : MonoSingleton<ObjectPool>
             }
         }
 
-        poolReady = true;
+        _poolReady = true;
     }
 
     public void DestroyAll()
     {
-        var count = pool.Count;
+        var count = _pool.Count;
         for (var i = 0; i < count; i++)
         {
-            GameObject item = pool[i];
+            GameObject item = _pool[i];
             if (item.activeSelf == true)
             {
                 item.SetActive(false);
@@ -57,18 +67,23 @@ public class ObjectPool : MonoSingleton<ObjectPool>
         gameObject.SetActive(false);
     }
 
-    public GameObject GetInactiveObject(string name, Vector3 spawnPosition)
+    public GameObject GetInactiveObject(string name)
     {
+        if (!_poolReady)
+        {
+            Debug.LogWarning("Pool not ready yet :'(");
+            return null;
+        }
+
         // get object out of pool
-        var count = pool.Count;
+        var count = _pool.Count;
         for (var i = 0; i < count; i++)
         {
-            GameObject item = pool[i];
+            GameObject item = _pool[i];
             if (item.activeSelf == false && string.CompareOrdinal(item.name, name) == 0)
             {
 
                 item.SetActive(true);
-                item.transform.position = spawnPosition;
                 return item;
             }
         }
@@ -82,11 +97,11 @@ public class ObjectPool : MonoSingleton<ObjectPool>
 
     private GameObject SpawnObject(GameObject prefab)
     {
-        GameObject obj = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
-        obj.transform.SetParent(Container);
+        var obj = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
+        obj.transform.SetParent(Container, false);
         obj.name = prefab.name;
         obj.SetActive(false);
-        pool.Add(obj);
+        _pool.Add(obj);
         return obj;
     }
 
@@ -108,7 +123,8 @@ public class ObjectPool : MonoSingleton<ObjectPool>
 
     public IEnumerator ParticleEffect(string prefabName, Vector2 pos)
     {
-        var go = ObjectPool.Instance.GetInactiveObject(prefabName, new Vector3(pos.x, pos.y));
+        var go = ObjectPool.Instance.GetInactiveObject(prefabName);
+        go.transform.position = pos;
         var particle = go.GetComponentInChildren<ParticleSystem>();
 
         // if particle if effect has loop stop here
@@ -117,12 +133,24 @@ public class ObjectPool : MonoSingleton<ObjectPool>
 
         while (particle.isPlaying)
         {
-            yield return new WaitForSeconds(1f / 60f);
+            yield return new WaitForEndOfFrame();
         }
 
         ObjectPool.Instance.Deactivate(go);
 
         yield return null;
+    }
+
+    public int CountActiveObjects()
+    {
+        var count = 0;
+        var poolCount = _pool.Count;
+        for (var i = 0; i < poolCount; i++)
+        {
+            if (_pool[i].activeSelf)
+                count++;
+        }
+        return count;
     }
 
 
