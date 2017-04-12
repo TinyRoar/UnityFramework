@@ -8,23 +8,20 @@ using UnityEngine.UI;
 /// Object Pool Design Pattern
 /// by Tiny Roar, 2016
 /// </summary>
-public class ObjectPool : MonoSingleton<ObjectPool>
+public sealed class ObjectPool : MonoSingleton<ObjectPool>
 {
     [SerializeField]
     private int objectsCount = 50;
     public List<GameObject> prefabs;
     [SerializeField]
     private Transform Container;
-    [SerializeField]
-    private bool FillPoolInConstructor = true;
 
     private List<GameObject> _pool;
     private bool _poolReady = false;
 
     protected override void Awake()
     {
-        if(FillPoolInConstructor)
-            FillPool();
+        FillPool();
     }
 
     public void FillPool()
@@ -67,6 +64,11 @@ public class ObjectPool : MonoSingleton<ObjectPool>
         gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Returns an object out of the pool that is enabled. Position and setActive(true) must be set manually
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
     public GameObject GetInactiveObject(string name)
     {
         if (!_poolReady)
@@ -82,8 +84,6 @@ public class ObjectPool : MonoSingleton<ObjectPool>
             GameObject item = _pool[i];
             if (item.activeSelf == false && string.CompareOrdinal(item.name, name) == 0)
             {
-
-                item.SetActive(true);
                 return item;
             }
         }
@@ -91,7 +91,6 @@ public class ObjectPool : MonoSingleton<ObjectPool>
         // fallback if no objects available
         var prefab = GetPrefabWithName(name);
         var obj = SpawnObject(prefab);
-        obj.SetActive(true);
         return obj;
     }
 
