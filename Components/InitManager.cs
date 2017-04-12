@@ -58,14 +58,11 @@ namespace TinyRoar.Framework
             // initialize Encrypt once to prevent first usage is not on main thread / deviceID would throw exception
             new Encrypt();
 
-            UIManager.Instance.Init();
-
         }
 
         void Start()
         {
-
-
+            UIManager.Instance.Init();
 
             // show layers
             ShowLayerEntries();
