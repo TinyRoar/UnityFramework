@@ -100,11 +100,11 @@ namespace TinyRoar.Framework
             expiredIndexList.Add(timerIndex);
 
             // check is update-method is not already signed in
-            if (isUpdate)
-                return;
+            //if (isUpdate)
+            //    return;
 
             // enable Update method
-            isUpdate = true;
+            //isUpdate = true;
             Updater.Instance.ExecuteNextFrame(DoUpdate);
 
         }
@@ -114,8 +114,10 @@ namespace TinyRoar.Framework
         /// </summary>
         static void DoUpdate()
         {
-            // disable Update variable
-            isUpdate = false;
+            if(expiredIndexList.Count == 0)
+                return;
+            // disable Update flag
+            //isUpdate = false;
 
             // loop
             foreach (int timerIndex in expiredIndexList.ToList())
@@ -133,9 +135,13 @@ namespace TinyRoar.Framework
                     // insert into list
                     Timer.Instance._endTimer.Remove(timerIndex);
                 }
-                // clear value of expired timer
-                expiredIndexList.Remove(timerIndex);
+                //// clear value of expired timer
+                //expiredIndexList.Remove(timerIndex);
             }
+            expiredIndexList.Clear();
+
+            // disable Update flag
+            //isUpdate = false;
 
         }
 
