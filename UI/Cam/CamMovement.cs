@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using TinyRoar.Framework;
-
+using System;
 
 namespace TinyRoar.Framework
 {
@@ -29,12 +29,19 @@ namespace TinyRoar.Framework
         [SerializeField] private int mouseMinY = -999;
 
         // orthographic Cam
-        private float OneSizeInWidth = 3.333333f;
-        private float OneSizeInHeight = 2.1f;
+        private float OneSizeInWidth = 1.1f;
+        private float OneSizeInHeight = 2f;
 
         //private Vector2 _positionOld;
 
         private Camera _cameraComponent;
+
+        [SerializeField] private bool NewMovement;
+
+        Vector3 Difference;
+        Vector3 Origin;
+
+        private bool drag;
 
         void Start()
         {
@@ -55,11 +62,19 @@ namespace TinyRoar.Framework
         {
             Inputs.Instance.OnLeftMouseMoveLate -= OnLeftMouseMove;
             Inputs.Instance.OnLeftMouseMoveLate += OnLeftMouseMove;
+            Inputs.Instance.OnLeftMouseUp -= OnLeftMouseUp;
+            Inputs.Instance.OnLeftMouseUp += OnLeftMouseUp;
+        }
+
+        private void OnLeftMouseUp()
+        {
+            drag = false;
         }
 
         public void DoDisable()
         {
             Inputs.Instance.OnLeftMouseMoveLate -= OnLeftMouseMove;
+            Inputs.Instance.OnLeftMouseUp -= OnLeftMouseUp;
         }
 
         void OnDestroy()
@@ -85,6 +100,15 @@ namespace TinyRoar.Framework
 
         private void OnLeftMouseMove()
         {
+            if (Camera.main == null)
+                return;
+
+            if (drag == false)
+            {
+                drag = true;
+                Origin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            }
+
             // int variable
             var mousePos = Vector2.zero;
 
@@ -138,9 +162,13 @@ namespace TinyRoar.Framework
             if (Camera.main.ScreenToWorldPoint(Input.mousePosition).y < mouseMinY)
                 return;
 
+            Difference = (Camera.main.ScreenToWorldPoint(Input.mousePosition)) - Camera.main.transform.position;
 
             // do camera movement
-            move(mousePos);
+            if (NewMovement)
+                MoveAbsolute(Origin - Difference);
+            else
+                move(mousePos);
         }
 
         private void move(Vector2 newPos)

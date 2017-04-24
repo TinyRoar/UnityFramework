@@ -25,8 +25,8 @@ namespace TinyRoar.Framework
         void Start()
         {
             cameraComponent = this.GetComponent<Camera>();
-            UpdateCamZoom(BaseSize);
             CamMovement = this.GetComponent<CamMovement>();
+            UpdateCamZoom(BaseSize);
         }
 
         public void DoEnable()
