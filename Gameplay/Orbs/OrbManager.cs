@@ -33,6 +33,7 @@ public sealed class OrbManager : MonoSingleton<OrbManager>
         Orb orb = obj.GetComponent<Orb>();
         orb.startPos = startPos;
         orb.targetPos = targetPos;
+        obj.SetActive(true);
 
         return orb;
     }

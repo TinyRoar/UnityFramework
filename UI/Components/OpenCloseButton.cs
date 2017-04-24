@@ -19,6 +19,7 @@ namespace TinyRoar.Framework
         [Header("Layer")]
         public bool UseBlend;
         public float Delay;
+        public float WaitDelay;
         public List<LayerEntry> ActionList;
         public List<AnimationConfig> Animations;
 
@@ -36,6 +37,20 @@ namespace TinyRoar.Framework
                 Debug.LogError("Game Quit!");
                 Application.Quit();
             }
+
+            if (WaitDelay == 0)
+            {
+                this.DoUIStuff();
+            }
+            else
+            {
+                Timer.Instance.Add(WaitDelay, this.DoUIStuff);
+            }
+        }
+
+        private void DoUIStuff()
+        {
+
 
             int count = ActionList.Count;
             for (var i = 0; i < count; i++)

@@ -20,7 +20,7 @@ namespace TinyRoar.Framework
         protected Button UIButton;
         private Vector3 posDown;
         private readonly float acceptedScrollDistance = Screen.width*0.1f;
-        private float reClickableAfterSec = 0.5f;
+        public float ReclickableDelay = 0.5f;
 
         // used for locked level
         public bool Disallowed { get; set; }
@@ -57,7 +57,7 @@ namespace TinyRoar.Framework
             if (MultipleClickable == false)
             {
                 this.GetComponent<Button>().interactable = false;
-                Timer.Instance.Add(reClickableAfterSec, reclickableCallback);
+                Timer.Instance.Add(ReclickableDelay, reclickableCallback);
             }
 
             // AAAAAAND... ACTION!

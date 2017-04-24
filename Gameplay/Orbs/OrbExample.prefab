@@ -30,7 +30,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4905231457270242
 Transform:
   m_ObjectHideFlags: 1
@@ -177,6 +177,9 @@ MonoBehaviour:
   startForce: 5
   distanceToBeFinished: 5
   force: 100
+  flyDirectlyToGoal: 0
+  startFlyingAfterSeconds: 10
+  useTrailRenderer: 1
 --- !u!212 &212059170037103606
 SpriteRenderer:
   m_ObjectHideFlags: 1

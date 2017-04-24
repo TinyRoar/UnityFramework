@@ -2,6 +2,9 @@
 using System.Collections;
 using TinyRoar.Framework;
 
+/// <summary>
+/// Important: GameObject of this Orb Script must be disabled by defaule!!!1!1eleven
+/// </summary>
 public class Orb : MonoBehaviour
 {
     [SerializeField]
@@ -55,7 +58,6 @@ public class Orb : MonoBehaviour
 
     void OnEnable()
     {
-        Print.Log("Orb OnEnable");
         if (rigid == null)
         {
             rigid = GetComponent<Rigidbody2D>();
