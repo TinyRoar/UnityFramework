@@ -43,9 +43,13 @@ namespace TinyRoar.Framework
 
         private bool drag;
 
-        void Start()
+        private void Awake()
         {
             _cameraComponent = this.GetComponent<Camera>();
+        }
+
+        void Start()
+        {
 
 			#if UNITY_EDITOR
 				SpeedMobileMultiply = new Vector2(1, 1);
