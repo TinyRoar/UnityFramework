@@ -181,7 +181,7 @@ namespace TinyRoar.Framework
                 delay = _delay;
 
             if (delay != 0)
-                Timer.Instance.Add(delay, TimerEndEnvironment);
+                Timer.Instance.Add(delay);
             else
                 TimerEndEnvironment();
 
@@ -264,7 +264,7 @@ namespace TinyRoar.Framework
             {
                 // start timer
                 _timerStarted = true;
-                Timer.Instance.Add(_delay, TimerEndLayer);
+                Timer.Instance.Add(_delay);
             }
 
         }
@@ -304,7 +304,7 @@ namespace TinyRoar.Framework
 
             float blendDelay = _delay - _blendTime / 2;
             if (blendDelay > 0)
-                Timer.Instance.Add(blendDelay, TimerEndBlende);
+                Timer.Instance.Add(blendDelay);
             else
                 TimerEndBlende();
 
@@ -313,7 +313,7 @@ namespace TinyRoar.Framework
         private void TimerEndBlende()
         {
             this._blend.SetActive(true);
-            Timer.Instance.Add(_blendTime, TimerEndBlendeDisable);
+            Timer.Instance.Add(_blendTime);
         }
 
         private void TimerEndBlendeDisable()

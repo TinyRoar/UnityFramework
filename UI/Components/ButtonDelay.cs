@@ -41,10 +41,7 @@ namespace TinyRoar.Framework
                 button.interactable = false;
 
                 // enable after some time
-                Timer.Instance.Add(time, delegate
-                {
-                    button.interactable = true;
-                });
+                Timer.Instance.Add(time);
             }
         }
 

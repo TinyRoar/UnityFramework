@@ -57,7 +57,7 @@ namespace TinyRoar.Framework
             if (MultipleClickable == false)
             {
                 this.GetComponent<Button>().interactable = false;
-                Timer.Instance.Add(ReclickableDelay, reclickableCallback);
+                Timer.Instance.Add(ReclickableDelay);
             }
 
             // AAAAAAND... ACTION!

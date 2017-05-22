@@ -80,10 +80,7 @@ public class Orb : MonoBehaviour
         this.GetComponent<RectTransform>().localPosition = localPos;
 
         Vector3 rand = Quaternion.Euler(0,0,RandomGenerator.Instance.Range(0,361)) * Vector3.right * force;
-        Timer.Instance.Add(0.1f, delegate
-        {
-            rigid.AddForce(rand, ForceMode2D.Impulse);
-        });
+        Timer.Instance.Add(0.1f);
 
         if (flyDirectlyToGoal)
         {
@@ -91,7 +88,7 @@ public class Orb : MonoBehaviour
         }
         else
         {
-            Timer.Instance.Add(this.startFlyingAfterSeconds, () => _flyToGoal = true);
+            Timer.Instance.Add(this.startFlyingAfterSeconds);
         }
 
         InvokeRepeating("MoveToRandomDir", 1f, 1f);
