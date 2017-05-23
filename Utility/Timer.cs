@@ -50,16 +50,8 @@ namespace TinyRoar.Framework
         /// <param name="time">Time in seconds</param>
         /// <param name="endEvent">delegate event that should be called after timer is over</param>
         /// <returns>timerID - used if you want to stop the timer</returns>
-        public int Add(float time)
+        public int Add(float time, Action endEvent)
         {
-            Action endEvent = () =>
-            {
-                foreach (ResourceEntry resourceEntry in challengeConfig.GetCurrentChallengeLevel().RewardedResources)
-                {
-                    user.currency.increase(resourceEntry.ResourceType, resourceEntry.Amount);
-                }
-                userUpdatedResourcesSignal.Dispatch();
-            };
             if (time == 0)
             {
                 endEvent();

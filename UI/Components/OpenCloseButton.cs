@@ -44,7 +44,7 @@ namespace TinyRoar.Framework
             }
             else
             {
-                Timer.Instance.Add(WaitDelay);
+                Timer.Instance.Add(WaitDelay, this.DoUIStuff);
             }
         }
 
