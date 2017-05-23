@@ -14,21 +14,32 @@ namespace TinyRoar.Framework
         public GameObject GameObject { get; set; }
         public View View { get; set; }
 
-        public LayerEntry(string layerName, GameObject gameObject, LayerConfig layerConfig)
+        public LayerEntry(string layerName, Transform transform, LayerConfig layerConfig)
         {
-            var layer = StringToLayer(layerName);
+            if (transform == null)
+            {
+                var msg = "Layer " + layerName + " hasn't a child named 'Container' :'(";
+                throw new Exception(msg);
+            }
 
+            if (layerConfig == null)
+            {
+                var msg = "Layer " + layerName + " hasn't a 'LayerConfig' Script on it :'(";
+                throw new Exception(msg);
+            }
+
+            var layer = StringToLayer(layerName);
             if (layer == Layer.None)
             {
-                Debug.LogWarning("Layer " + layerName + " not found in ENUM :'(");
-                return;
+                var msg = "Layer " + layerName + " not found in ENUM :'(";
+                throw new Exception(msg);
             }
 
             Layer = layer;
             Action = UIAction.Hide;
-            GameObject = gameObject;
+            GameObject = transform.gameObject;
             LayerConfig = layerConfig;
-            View = gameObject.transform.parent.GetComponent<View>();
+            View = transform.transform.parent.GetComponent<View>();
         }
 
         public static Layer StringToLayer(string layerName)

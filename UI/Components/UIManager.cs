@@ -99,13 +99,26 @@ namespace TinyRoar.Framework
         {
             // get UI
             Transform ui = GetTransformWithName(UIName);
-
             // save all Layer and hide it
             foreach (Transform item in ui)
             {
-                LayerEntry layer = new LayerEntry(item.name, item.transform.FindChild("Container").gameObject, item.transform.GetComponent<LayerConfig>());
-                LayerManager.Instance.AddLayerEntry(layer);
-                Hide(layer.Layer);
+                if (item.name == "OLD")
+                {
+                    Debug.Log(item);
+                }
+                try
+                {
+                    var child = item.transform.FindChild("Container");
+                    var script = item.transform.GetComponent<LayerConfig>();
+                    LayerEntry layer = new LayerEntry(item.name, child, script);
+                    LayerManager.Instance.AddLayerEntry(layer);
+                    Hide(layer.Layer);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning(e);
+
+                }
             }
         }
 
@@ -167,13 +180,6 @@ namespace TinyRoar.Framework
                 Debug.LogWarning("A script is trying to set same Environment that is already active");
                 return;
             }
-
-            // get delay by old Layer
-            /*if (LayerManager.Layer != Layer.None)
-        {
-            LayerConfig UIConfig = LayerManager.GetLayerEntry()LayerManager.Layer.ToString().GetComponent<LayerConfig>();
-            delay = UIConfig.Delay;
-        }*/
 
             _endTimerEnvironment = environment;
 
@@ -441,8 +447,8 @@ namespace TinyRoar.Framework
                 Debug.LogWarning("Layer named " + layer + " not found");
                 return;
             }
-            if (GameConfig.Instance.Debug)
-                Debug.LogWarning("Show(" + layerEntry.Layer + ")");
+            //if (GameConfig.Instance.Debug)
+            //    Debug.LogWarning("Show(" + layerEntry.Layer + ")");
             this.Show(layerEntry.GameObject);
         }
 
@@ -463,6 +469,8 @@ namespace TinyRoar.Framework
                 Debug.LogWarning("Show failed -> obj null");
                 return;
             }
+            if (obj.activeSelf)
+                return;
             obj.SetActive(true);
         }
 
@@ -476,8 +484,8 @@ namespace TinyRoar.Framework
                 Debug.LogWarning("Layer named " + layer + " not found");
                 return;
             }
-            if (GameConfig.Instance.Debug)
-                Debug.LogWarning("Hide(" + layerEntry.Layer + ")");
+            //if (GameConfig.Instance.Debug)
+            //    Debug.LogWarning("Hide(" + layerEntry.Layer + ")");
             this.Hide(layerEntry.GameObject);
         }
 
@@ -493,13 +501,13 @@ namespace TinyRoar.Framework
 
         private void Hide(GameObject obj)
         {
-            if (!obj.activeSelf)
-                return;
             if (obj == null)
             {
                 Debug.LogWarning("Hide failed -> obj null");
                 return;
             }
+            if (!obj.activeSelf)
+                return;
             obj.SetActive(false);
         }
 
