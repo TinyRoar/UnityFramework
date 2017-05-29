@@ -27,7 +27,7 @@ namespace TinyRoar.Framework
         /// <summary>
         /// flag if a nextFrame Update is signedIn
         /// </summary>
-        private static bool isUpdate;
+        //private static bool isUpdate;
 
         /// <summary>
         /// list of index-of-actions which timer is ended and should be fired in next frame
@@ -40,7 +40,7 @@ namespace TinyRoar.Framework
         public Timer()
         {
             _endTimer = new Dictionary<int, Action>();
-            isUpdate = false;
+            //isUpdate = false;
             expiredIndexList = new List<int>();
         }
 
