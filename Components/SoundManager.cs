@@ -164,7 +164,7 @@ namespace TinyRoar.Framework
         {
             foreach (var item in BgMusic)
             {
-                var obj = this.transform.FindChild("Audio: " + item);
+                var obj = this.transform.Find("Audio: " + item);
                 if (obj != null)
                     Destroy(obj.gameObject);
             }

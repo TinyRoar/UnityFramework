@@ -62,12 +62,12 @@ namespace TinyRoar.Framework
             foreach (Transform item in ui)
             {
                 this.Show(item);
-                if (item.transform.FindChild("Container") == null)
+                if (item.transform.Find("Container") == null)
                 {
                     Debug.LogWarning("Error! UI '" + item + "' hasn't got a 'container'");
                     continue;
                 }
-                this.Show(item.transform.FindChild("Container"));
+                this.Show(item.transform.Find("Container"));
             }
         }
 
@@ -83,12 +83,12 @@ namespace TinyRoar.Framework
             foreach (Transform item in env)
             {
                 this.Show(item);
-                if (item.transform.FindChild("Container") == null)
+                if (item.transform.Find("Container") == null)
                 {
                     Debug.LogWarning("Error! Environment '"+ item + "' hasn't got a 'container'");
                     continue;
                 }
-                this.Show(item.transform.FindChild("Container"));
+                this.Show(item.transform.Find("Container"));
             }
         }
 
@@ -108,7 +108,7 @@ namespace TinyRoar.Framework
                 }
                 try
                 {
-                    var child = item.transform.FindChild("Container");
+                    var child = item.transform.Find("Container");
                     var script = item.transform.GetComponent<LayerConfig>();
                     LayerEntry layer = new LayerEntry(item.name, child, script);
                     LayerManager.Instance.AddLayerEntry(layer);
@@ -134,7 +134,7 @@ namespace TinyRoar.Framework
             foreach (Transform item in env)
             {
                 GameEnvironment envKey = (GameEnvironment)Enum.Parse(typeof(GameEnvironment), item.name);
-                Transform item2 = item.FindChild("Container");
+                Transform item2 = item.Find("Container");
                 Hide(item2);
                 _environmentList.Add(envKey, item2);
             }
