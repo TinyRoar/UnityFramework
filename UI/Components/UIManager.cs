@@ -117,7 +117,6 @@ namespace TinyRoar.Framework
                 catch (Exception e)
                 {
                     Debug.LogWarning(e);
-
                 }
             }
         }

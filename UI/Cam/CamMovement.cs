@@ -9,7 +9,6 @@ namespace TinyRoar.Framework
     [RequireComponent(typeof (CamConfig))]
     public class CamMovement : MonoBehaviour, ICam
     {
-
         [SerializeField] private float MinX;
         [SerializeField] private float MaxX;
         [SerializeField] private float MinY;
@@ -21,27 +20,23 @@ namespace TinyRoar.Framework
         private float MaxYtemp;
 
         [SerializeField] private bool YisZ = true;
-
         [SerializeField] private Vector2 Speed = new Vector2(1, 1);
-
         [SerializeField] private Vector2 SpeedMobileMultiply = new Vector2(1, 1);
-
         [SerializeField] private int mouseMinY = -999;
 
         // orthographic Cam
         private float OneSizeInWidth = 1.1f;
         private float OneSizeInHeight = 2f;
 
-        //private Vector2 _positionOld;
-
         private Camera _cameraComponent;
 
         [SerializeField] private bool NewMovement;
+        [SerializeField] private bool MovementViaAnimation;
 
         Vector3 Difference;
         Vector3 Origin;
 
-        private bool drag;
+        private bool _drag;
 
         private void Awake()
         {
@@ -72,7 +67,7 @@ namespace TinyRoar.Framework
 
         private void OnLeftMouseUp()
         {
-            drag = false;
+            _drag = false;
         }
 
         public void DoDisable()
@@ -83,16 +78,22 @@ namespace TinyRoar.Framework
 
         void OnDestroy()
         {
-            //DoDisable();
+            try
+            {
+                DoDisable();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning(e);
+            }
         }
 
         public void UpdateMinMax()
         {
-            //int groveWidth = Config.Instance.GroveWidth;
-            float camWidth = _cameraComponent.orthographicSize*OneSizeInWidth; // orthographicSize * 3.3 = camWidth
+            float camWidth = _cameraComponent.orthographicSize * OneSizeInWidth;
             MinXtemp = MinX + (camWidth/2);
             MaxXtemp = MaxX - (camWidth/2);
-            float camHeight = _cameraComponent.orthographicSize*OneSizeInHeight; // orthographicSize * 2.2 = camWidth
+            float camHeight = _cameraComponent.orthographicSize * OneSizeInHeight;
             MinYtemp = MinY + (camHeight/2);
             MaxYtemp = MaxY - (camHeight/2);
         }
@@ -107,9 +108,9 @@ namespace TinyRoar.Framework
             if (Camera.main == null)
                 return;
 
-            if (drag == false)
+            if (_drag == false)
             {
-                drag = true;
+                _drag = true;
                 Origin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             }
 
@@ -123,12 +124,6 @@ namespace TinyRoar.Framework
             // get touch pos if available
             if (Input.touchCount > 0)
             {
-                //Debug.Log(Input.GetTouch(0).phase);
-
-                //if(Input.GetTouch(0).phase == TouchPhase.Began)
-                //{
-                //_positionOld = Input.touches[0].position;
-                //}
 
                 if (
                     Input.GetTouch(0).phase == TouchPhase.Moved
@@ -137,20 +132,10 @@ namespace TinyRoar.Framework
                     )
                 {
 
-                    //Debug.Log(Input.touches[0].deltaPosition);
                     mousePos.x = Input.touches[0].deltaPosition.x;
                     mousePos.y = Input.touches[0].deltaPosition.y;
 
                     mousePos *= _cameraComponent.orthographicSize/25;
-
-                    /*Debug.Log(Input.touches[0].position);
-
-                Vector2 diff = Input.touches[0].position - positionOld;
-                diff.x /= Screen.width;
-                diff.y /= Screen.height;
-                mousePos = diff;
-                Debug.Log(mousePos);
-                Debug.Log("---");*/
 
                 }
                 else
@@ -160,8 +145,9 @@ namespace TinyRoar.Framework
 
             }
 
-            //Debug.Log(mousePos);
             mousePos *= -1;
+
+            //Debug.Log(mousePos.y);
 
             if (Camera.main.ScreenToWorldPoint(Input.mousePosition).y < mouseMinY)
                 return;
@@ -169,13 +155,15 @@ namespace TinyRoar.Framework
             Difference = (Camera.main.ScreenToWorldPoint(Input.mousePosition)) - Camera.main.transform.position;
 
             // do camera movement
-            if (NewMovement)
+            if (MovementViaAnimation)
+                DoMovementViaAnimation(Origin - Difference);
+            else if (NewMovement)
                 MoveAbsolute(Origin - Difference);
             else
-                move(mousePos);
+                Move(mousePos);
         }
 
-        private void move(Vector2 newPos)
+        private void Move(Vector2 newPos)
         {
             // set values
             Vector3 pos = transform.position;
@@ -229,7 +217,7 @@ namespace TinyRoar.Framework
             //newPos *= Config.Instance.SeedingCameraSpeed;
             newPos *= Time.deltaTime;
             newPos *= Screen.width/Config.Instance.BaseScreenSize.x;
-            move(newPos);
+            Move(newPos);
         }
 
         public void CenterCamera()
@@ -237,6 +225,11 @@ namespace TinyRoar.Framework
             Vector3 pos = transform.position;
             //pos.x = Config.Instance.GroveWidth / 2;
             MoveAbsolute(pos);
+        }
+
+        private void DoMovementViaAnimation(Vector3 pos)
+        {
+            //Print.Log(pos.y);
         }
 
     }

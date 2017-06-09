@@ -17,12 +17,14 @@ namespace TinyRoar.Framework
             {
                 OnChange();
             }
+
             /*
-        CamMovement camMovement = this.GetComponent<CamMovement>();
-        if (camMovement != null)
-        {
-            camMovement.DoDisable();
-        }*/
+            CamMovement camMovement = this.GetComponent<CamMovement>();
+            if (camMovement != null)
+            {
+                camMovement.DoDisable();
+            }*/
+
             CamMovement = this.GetComponent<CamMovement>();
 
         }
