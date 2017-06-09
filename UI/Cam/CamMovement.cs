@@ -29,6 +29,7 @@ namespace TinyRoar.Framework
         private float OneSizeInHeight = 2f;
 
         private Camera _cameraComponent;
+        private Animator _animator;
 
         [SerializeField] private bool NewMovement;
         [SerializeField] private bool MovementViaAnimation;
@@ -41,6 +42,11 @@ namespace TinyRoar.Framework
         private void Awake()
         {
             _cameraComponent = this.GetComponent<Camera>();
+            if (MovementViaAnimation)
+            {
+                _animator = this.GetComponent<Animator>();
+                _animator.speed = 0;
+            }
         }
 
         void Start()
@@ -55,6 +61,7 @@ namespace TinyRoar.Framework
             CenterCamera();
 
             UpdateMovement();
+
         }
 
         public void DoEnable()
@@ -147,20 +154,24 @@ namespace TinyRoar.Framework
 
             mousePos *= -1;
 
-            //Debug.Log(mousePos.y);
-
             if (Camera.main.ScreenToWorldPoint(Input.mousePosition).y < mouseMinY)
                 return;
 
-            Difference = (Camera.main.ScreenToWorldPoint(Input.mousePosition)) - Camera.main.transform.position;
-
             // do camera movement
             if (MovementViaAnimation)
-                DoMovementViaAnimation(Origin - Difference);
+            {
+                DoMovementViaAnimation(mousePos);
+            }
             else if (NewMovement)
+            {
+                Difference = (Camera.main.ScreenToWorldPoint(Input.mousePosition)) - Camera.main.transform.position;
                 MoveAbsolute(Origin - Difference);
+            }
             else
+            {
                 Move(mousePos);
+            }
+
         }
 
         private void Move(Vector2 newPos)
@@ -227,9 +238,20 @@ namespace TinyRoar.Framework
             MoveAbsolute(pos);
         }
 
-        private void DoMovementViaAnimation(Vector3 pos)
+        private float step = 0;
+        private float size = 1f;
+        [SerializeField] private string animationName = "";
+
+        private void DoMovementViaAnimation(Vector3 mousePos)
         {
-            //Print.Log(pos.y);
+
+            var mouseRelative = mousePos.y / Screen.height;
+            //Debug.Log(mouseRelative);
+            step += mouseRelative * size;
+            step = Mathf.Clamp01(step);
+
+
+            _animator.Play(animationName, 0, step);
         }
 
     }
