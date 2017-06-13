@@ -28,7 +28,7 @@ namespace TinyRoar.Framework
         private float OneSizeInWidth = 1.1f;
         private float OneSizeInHeight = 2f;
 
-        private Camera _cameraComponent;
+        [SerializeField] private Camera _cameraComponent;
         private Animator _animator;
 
         [SerializeField] private bool NewMovement;
@@ -41,7 +41,8 @@ namespace TinyRoar.Framework
 
         private void Awake()
         {
-            _cameraComponent = this.GetComponent<Camera>();
+            if(_cameraComponent == null)
+                _cameraComponent = this.GetComponent<Camera>();
             if (MovementViaAnimation)
             {
                 _animator = this.GetComponent<Animator>();
