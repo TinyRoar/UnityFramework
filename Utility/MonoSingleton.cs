@@ -22,20 +22,20 @@ namespace TinyRoar.Framework
                 if (_instance == null)
                     _instance = FindObjectOfType<T>();
 
-                bool isMainThread = false;
-                if(InitManager.MainThread != null)
-                    isMainThread = InitManager.MainThread.Equals(System.Threading.Thread.CurrentThread);
+                //bool isMainThread = false;
+                //if(InitManager.MainThread != null)
+                //    isMainThread = InitManager.MainThread.Equals(System.Threading.Thread.CurrentThread);
 
-                if (isMainThread)
-                {
-                    int objectCount = FindObjectsOfType<T>().Length;
+                //if (isMainThread)
+                //{
+                //    int objectCount = FindObjectsOfType<T>().Length;
 
-                    if (objectCount > 1)
-                    {
-                        Type typeOfAction = typeof(T);
-                        Debug.LogError(objectCount + " GameObjects with script '" + typeOfAction.Name + "' in scene!!!");
-                    }
-                }
+                //    if (objectCount > 1)
+                //    {
+                //        Type typeOfAction = typeof(T);
+                //        Debug.LogError(objectCount + " GameObjects with script '" + typeOfAction.Name + "' in scene!!!");
+                //    }
+                //}
 
                 if (_instance == null)
                 {
