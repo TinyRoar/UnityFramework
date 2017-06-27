@@ -23,6 +23,7 @@ namespace TinyRoar.Framework
         [SerializeField]
         public List<LayerEntry> LayerEntries;
 
+        public static bool StaticDebug = false;
         public bool Debug = false;
 
         public bool UseAnalytics = false;
@@ -36,6 +37,8 @@ namespace TinyRoar.Framework
         protected override void Awake()
         {
             base.Awake();
+
+            StaticDebug = Debug;
 
             // set FPS + disable vsync
             QualitySettings.vSyncCount = 0;
@@ -53,7 +56,7 @@ namespace TinyRoar.Framework
                 GameConfig.Instance.UseSaveMethod = SaveMethod.BinaryCrypt;
             }
 
-                MainThread = System.Threading.Thread.CurrentThread;
+            MainThread = System.Threading.Thread.CurrentThread;
 
             // initialize Encrypt once to prevent first usage is not on main thread / deviceID would throw exception
             new Encrypt();

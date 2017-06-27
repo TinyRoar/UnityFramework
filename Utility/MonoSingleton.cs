@@ -7,7 +7,7 @@ namespace TinyRoar.Framework
     public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour {
 
         private static T _instance;
-        private static bool isApplicationExit = false;
+        private static bool _isApplicationExit = false;
 
         /// <summary>
         /// get / set Instance
@@ -16,32 +16,20 @@ namespace TinyRoar.Framework
         {
             get
             {
-                if (isApplicationExit)
+                if (_isApplicationExit)
                     return null;
 
                 if (_instance == null)
                     _instance = FindObjectOfType<T>();
 
-                //bool isMainThread = false;
-                //if(InitManager.MainThread != null)
-                //    isMainThread = InitManager.MainThread.Equals(System.Threading.Thread.CurrentThread);
-
-                //if (isMainThread)
-                //{
-                //    int objectCount = FindObjectsOfType<T>().Length;
-
-                //    if (objectCount > 1)
-                //    {
-                //        Type typeOfAction = typeof(T);
-                //        Debug.LogError(objectCount + " GameObjects with script '" + typeOfAction.Name + "' in scene!!!");
-                //    }
-                //}
+                if (InitManager.StaticDebug)
+                    CheckMultipleScripts();
 
                 if (_instance == null)
                 {
                     GameObject singleton = new GameObject();
                     _instance = singleton.AddComponent<T>();
-                    singleton.name = "(singleton) " + typeof(T).ToString();
+                    singleton.name = "(singleton) " + typeof(T);
                     Debug.LogWarning(singleton.name + " created");
                 }
 
@@ -53,6 +41,22 @@ namespace TinyRoar.Framework
             }
         }
 
+        private static void CheckMultipleScripts()
+        {
+            var isMainThread = false;
+            if (InitManager.MainThread != null)
+                isMainThread = InitManager.MainThread.Equals(System.Threading.Thread.CurrentThread);
+            if (!isMainThread)
+                return;
+
+            var objectCount = FindObjectsOfType<T>().Length;
+            if (objectCount <= 1)
+                return;
+
+            var typeOfAction = typeof(T);
+            Debug.LogError(objectCount + " GameObjects with script '" + typeOfAction.Name + "' in scene!!!");
+        }
+
         /// <summary>
         /// Initialisation
         /// </summary>
@@ -60,7 +64,7 @@ namespace TinyRoar.Framework
         {
 	        if (_instance == null)
                 _instance = this as T;
-            isApplicationExit = false;
+            _isApplicationExit = false;
         }
 
 
@@ -77,7 +81,7 @@ namespace TinyRoar.Framework
         /// </summary>
         protected virtual void OnApplicationQuit()
         {
-            isApplicationExit = true;
+            _isApplicationExit = true;
         }
 
     }
