@@ -9,7 +9,7 @@ namespace TinyRoar.Framework
 
         [SerializeField] private bool Enabled = true;
 
-        public CamMovement CamMovement { get; set; }
+        //public CamMovement CamMovement { get; set; }
 
         void Start()
         {
@@ -25,7 +25,7 @@ namespace TinyRoar.Framework
                 camMovement.DoDisable();
             }*/
 
-            CamMovement = this.GetComponent<CamMovement>();
+            //CamMovement = this.GetComponent<CamMovement>();
 
         }
 
@@ -43,6 +43,8 @@ namespace TinyRoar.Framework
 
         public void SetEnabled(bool enabled)
         {
+            if (Enabled == enabled)
+                return;
             Enabled = enabled;
             OnChange();
         }

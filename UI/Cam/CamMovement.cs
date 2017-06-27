@@ -43,7 +43,7 @@ namespace TinyRoar.Framework
         private float size = 1f;
         [SerializeField] private string animationName = "";
         //[SerializeField] private List<Layer> OnlyWorkIfTheseLayersAreOpened;
-        [SerializeField] private List<Layer> PausedIfLayerOpen;
+        [SerializeField] private List<Layer> WorkOnlyFollowingLayerOpened;
 
         Vector3 Difference;
         Vector3 Origin;
@@ -74,10 +74,45 @@ namespace TinyRoar.Framework
 
             UpdateMovement();
 
+            Events.Instance.OnLayerChange += OnLayerChange;
+        }
+
+        private bool _isEnabled = false;
+        private void OnLayerChange(Layer layer, UIAction action)
+        {
+            // check for disable
+            if (action == UIAction.Show)
+            {
+                if (!_isEnabled)
+                    return;
+                bool layerInList = false;
+                for (var i = 0; i < WorkOnlyFollowingLayerOpened.Count; i++)
+                {
+                    var pauseLayer = WorkOnlyFollowingLayerOpened[i];
+                    if (layer == pauseLayer)
+                    {
+                        layerInList = true;
+                        break;
+                    }
+                }
+                if(!layerInList)
+                    CamConfig.Instance.SetEnabled(false);
+            }
+            else
+            {
+                if (_isEnabled)
+                    return;
+                // check for all other disabled
+                var layerList = LayerManager.Instance.GetAllLayersWithAction(UIAction.Show, WorkOnlyFollowingLayerOpened);
+                if (layerList.Count != 0)
+                    return;
+                CamConfig.Instance.SetEnabled(true);
+            }
         }
 
         public void DoEnable()
         {
+            _isEnabled = true;
             Inputs.Instance.OnLeftMouseMoveLate -= OnLeftMouseMove;
             Inputs.Instance.OnLeftMouseMoveLate += OnLeftMouseMove;
             Inputs.Instance.OnLeftMouseUp -= OnLeftMouseUp;
@@ -91,6 +126,7 @@ namespace TinyRoar.Framework
 
         public void DoDisable()
         {
+            _isEnabled = false;
             Inputs.Instance.OnLeftMouseMoveLate -= OnLeftMouseMove;
             Inputs.Instance.OnLeftMouseUp -= OnLeftMouseUp;
         }

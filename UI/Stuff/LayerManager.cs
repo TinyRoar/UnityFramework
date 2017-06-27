@@ -84,14 +84,17 @@ namespace TinyRoar.Framework
             return UIAction.None;
         }
 
-        public List<LayerEntry> GetAllLayersWithAction(UIAction action)
+        public List<LayerEntry> GetAllLayersWithAction(UIAction action, List<Layer> excludeList = null)
         {
             List<LayerEntry> layerList = new List<LayerEntry>();
             for (var i = 0; i < _layerList.Count; i++)
             {
-                if (_layerList[i].Action != action)
+                var layer = _layerList[i];
+                if (layer.Action != action)
                     continue;
-                layerList.Add(_layerList[i]);
+                if(excludeList != null && excludeList.Contains(layer.Layer))
+                    continue;
+                layerList.Add(layer);
             }
             return layerList;
         }
