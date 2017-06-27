@@ -34,21 +34,18 @@ namespace TinyRoar.Framework
         private float OneSizeInHeight = 2f;
 
         [SerializeField] private Camera _cameraComponent;
-        private Animator _animator;
-
         [SerializeField] private bool NewMovement;
         [SerializeField] private bool MovementViaAnimation;
-
-        private float step = 0;
-        private float size = 1f;
         [SerializeField] private string animationName = "";
-        //[SerializeField] private List<Layer> OnlyWorkIfTheseLayersAreOpened;
         [SerializeField] private List<Layer> WorkOnlyFollowingLayerOpened;
 
-        Vector3 Difference;
-        Vector3 Origin;
-
+        private Animator _animator;
+        private Vector3 Difference;
+        private Vector3 Origin;
         private bool _drag;
+        private float step = 0;
+        private float size = 1f;
+        private string DatakeyAnimCam = "AnimationCameraTimelinePosition";
 
         void Awake()
         {
@@ -72,9 +69,16 @@ namespace TinyRoar.Framework
 
             CenterCamera();
 
-            UpdateMovement();
-
             Events.Instance.OnLayerChange += OnLayerChange;
+
+            if (MovementViaAnimation && DataManagement.Instance.CheckItem(DatakeyAnimCam))
+            {
+                float oldValue = DataManagement.Instance.Get(DatakeyAnimCam).Float;
+                step = oldValue;
+                SetAnimationValue(oldValue);
+            }
+
+            UpdateMovement();
         }
 
         private bool _isEnabled = false;
@@ -219,7 +223,6 @@ namespace TinyRoar.Framework
             {
                 Move(mousePos);
             }
-
         }
 
         private void Move(Vector2 newPos)
@@ -234,7 +237,6 @@ namespace TinyRoar.Framework
                 pos.y += z;
 
             MoveAbsolute(pos);
-
         }
 
         private void MoveAbsolute(Vector3 pos)
@@ -261,7 +263,6 @@ namespace TinyRoar.Framework
 
             // set to UI
             transform.position = pos;
-
         }
 
         public void DoMovement(Direction dir, float speed = 1)
@@ -288,15 +289,16 @@ namespace TinyRoar.Framework
 
         private void DoMovementViaAnimation(Vector3 mousePos)
         {
-
             var mouseRelative = mousePos.y / Screen.height;
-            //Debug.Log(mouseRelative);
             step += mouseRelative * size;
-            step = Mathf.Clamp01(step);
-
-
-            _animator.Play(animationName, 0, step);
+            step = Mathf.Clamp(step, 0, 0.99999f);
+            DataManagement.Instance.Set(DatakeyAnimCam, step);
+            SetAnimationValue(step);
         }
 
+        private void SetAnimationValue(float step)
+        {
+            _animator.Play(animationName, 0, step);
+        }
     }
 }

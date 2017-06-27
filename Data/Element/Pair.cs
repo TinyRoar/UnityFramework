@@ -113,6 +113,22 @@ namespace TinyRoar.Framework
             }
         }
 
+        public float Float
+        {
+            get
+            {
+                try
+                {
+                    return Convert.ToSingle(this.Value);
+                }
+                catch
+                {
+                    UnityEngine.Debug.LogWarning("Data-Key " + Key + " isn't an int :'(");
+                }
+                return 0;
+            }
+        }
+
 
     }
 
