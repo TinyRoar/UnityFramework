@@ -2,10 +2,15 @@
 using System.Collections;
 using TinyRoar.Framework;
 using System;
+using System.Collections.Generic;
 
+/*
+ * Move Camera Script
+ * Must be refactored
+ * ... and splited in AnimationCamera, 2DCamera, 3DCamera, etc.
+ */
 namespace TinyRoar.Framework
 {
-    // Move Camera Script
     [RequireComponent(typeof (CamConfig))]
     public class CamMovement : MonoBehaviour, ICam
     {
@@ -34,12 +39,18 @@ namespace TinyRoar.Framework
         [SerializeField] private bool NewMovement;
         [SerializeField] private bool MovementViaAnimation;
 
+        private float step = 0;
+        private float size = 1f;
+        [SerializeField] private string animationName = "";
+        //[SerializeField] private List<Layer> OnlyWorkIfTheseLayersAreOpened;
+        [SerializeField] private List<Layer> PausedIfLayerOpen;
+
         Vector3 Difference;
         Vector3 Origin;
 
         private bool _drag;
 
-        private void Awake()
+        void Awake()
         {
             if(_cameraComponent == null)
                 _cameraComponent = this.GetComponent<Camera>();
@@ -238,10 +249,6 @@ namespace TinyRoar.Framework
             //pos.x = Config.Instance.GroveWidth / 2;
             MoveAbsolute(pos);
         }
-
-        private float step = 0;
-        private float size = 1f;
-        [SerializeField] private string animationName = "";
 
         private void DoMovementViaAnimation(Vector3 mousePos)
         {
