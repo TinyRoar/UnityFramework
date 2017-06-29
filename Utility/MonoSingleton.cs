@@ -4,7 +4,8 @@ using UnityEngine;
 namespace TinyRoar.Framework
 {
 
-    public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour {
+    public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
+    {
 
         private static T _instance;
         private static bool _isApplicationExit = false;
@@ -21,9 +22,6 @@ namespace TinyRoar.Framework
 
                 if (_instance == null)
                     _instance = FindObjectOfType<T>();
-
-                if (InitManager.StaticDebug)
-                    CheckMultipleScripts();
 
                 if (_instance == null)
                 {
@@ -60,11 +58,14 @@ namespace TinyRoar.Framework
         /// <summary>
         /// Initialisation
         /// </summary>
-        protected virtual void Awake ()
+        protected virtual void Awake()
         {
-	        if (_instance == null)
+            if (_instance == null)
                 _instance = this as T;
             _isApplicationExit = false;
+
+            if (InitManager.StaticDebug)
+                CheckMultipleScripts();
         }
 
 
