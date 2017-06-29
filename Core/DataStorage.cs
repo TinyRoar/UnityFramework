@@ -123,7 +123,6 @@ namespace TinyRoar.Framework
                 {
                     UnityEngine.Debug.LogError("Xml File " + filename + " defect");
                     reader.Close();
-                    //File.Delete(filename);
                     obj = new T();
                 }
             }
@@ -139,34 +138,24 @@ namespace TinyRoar.Framework
         public T DeserializeXmlContent<T>(string fileContent, Type type) where T : new()
         {
             T obj;
-            //if (File.Exists(filename))
-            //{
+            var types = (from lAssembly in AppDomain.CurrentDomain.GetAssemblies()
+                            from lType in lAssembly.GetTypes()
+                            where type.IsAssignableFrom(lType)
+                            select lType).ToArray();
 
-                var types = (from lAssembly in AppDomain.CurrentDomain.GetAssemblies()
-                             from lType in lAssembly.GetTypes()
-                             where type.IsAssignableFrom(lType)
-                             select lType).ToArray();
-
-                XmlSerializer serializer = new XmlSerializer(typeof(T), types);
-                TextReader reader = new StringReader(fileContent);
-                try
-                {
-                    obj = (T)serializer.Deserialize(reader);
-                    reader.Close();
-                }
-                catch
-                {
-                    UnityEngine.Debug.LogError("Xml File " + fileContent + " defect");
-                    reader.Close();
-                    //File.Delete(filename);
-                    obj = new T();
+            XmlSerializer serializer = new XmlSerializer(typeof(T), types);
+            TextReader reader = new StringReader(fileContent);
+            try
+            {
+                obj = (T)serializer.Deserialize(reader);
+                reader.Close();
             }
-            //}
-            //else
-            //{
-            //    UnityEngine.Debug.LogWarning("Xml Deserialize File  " + filename + " doesn't exists.");
-            //    obj = new T();
-            //}
+            catch
+            {
+                UnityEngine.Debug.LogError("Xml File " + fileContent + " defect");
+                reader.Close();
+                obj = new T();
+            }
             return obj;
         }
 
