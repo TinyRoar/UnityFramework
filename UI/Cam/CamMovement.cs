@@ -307,7 +307,6 @@ namespace TinyRoar.Framework
 
         void OnTriggerEnter(Collider other)
         {
-            Print.Log("OnTriggerEnter");
             stop = step - 0.001f;
         }
 
