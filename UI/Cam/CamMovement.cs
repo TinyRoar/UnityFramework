@@ -45,6 +45,8 @@ namespace TinyRoar.Framework
         private bool _drag;
         private float step = 0;
         private float size = 1f;
+        private float stop;
+        private float stopDefault = 0.9999f;
         private string DatakeyAnimCam = "AnimationCameraTimelinePosition";
 
         void Awake()
@@ -78,6 +80,7 @@ namespace TinyRoar.Framework
                 SetAnimationValue(oldValue);
             }
 
+            ResetStop();
             UpdateMovement();
         }
 
@@ -291,7 +294,8 @@ namespace TinyRoar.Framework
         {
             var mouseRelative = mousePos.y / Screen.height;
             step += mouseRelative * size;
-            step = Mathf.Clamp(step, 0, 0.99999f);
+            //var stopTmp = stop - 0.00001f; // dont use "1" as end -> instead use "0.9999"
+            step = Mathf.Clamp(step, 0, stop);
             DataManagement.Instance.Set(DatakeyAnimCam, step);
             SetAnimationValue(step);
         }
@@ -300,5 +304,17 @@ namespace TinyRoar.Framework
         {
             _animator.Play(animationName, 0, step);
         }
+
+        void OnTriggerEnter(Collider other)
+        {
+            Print.Log("OnTriggerEnter");
+            stop = step - 0.001f;
+        }
+
+        public void ResetStop()
+        {
+            stop = stopDefault;
+        }
+
     }
 }
