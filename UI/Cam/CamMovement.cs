@@ -294,7 +294,6 @@ namespace TinyRoar.Framework
         {
             var mouseRelative = mousePos.y / Screen.height;
             step += mouseRelative * size;
-            //var stopTmp = stop - 0.00001f; // dont use "1" as end -> instead use "0.9999"
             step = Mathf.Clamp(step, 0, stop);
             DataManagement.Instance.Set(DatakeyAnimCam, step);
             SetAnimationValue(step);
@@ -308,6 +307,8 @@ namespace TinyRoar.Framework
         void OnTriggerEnter(Collider other)
         {
             stop = step - 0.001f;
+            if (stop < 0)
+                stop = 0;
         }
 
         public void ResetStop()
