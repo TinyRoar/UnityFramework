@@ -11,6 +11,5 @@ namespace TinyRoar.Framework
         //public float Delay = 0.5f;
         public string OpenSound = "";
         public string CloseSound = "";
-
     }
 }

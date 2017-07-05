@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class DeactivateButtonOnLayer : MonoBehaviour {
 
-    public Layer DeactivateOnLayer;
+    public LayerConfig DeactivateOnLayer;
     private Button btn;
 
 	void Start ()
@@ -17,7 +17,7 @@ public class DeactivateButtonOnLayer : MonoBehaviour {
 
     private void LayerChange(Layer layer, UIAction action)
     {
-        if (layer == DeactivateOnLayer)
+        if (layer == LayerManager.Instance.GetLayerEntry(DeactivateOnLayer).Layer)
         {
             if (action == UIAction.Show)
                 btn.interactable = false;
