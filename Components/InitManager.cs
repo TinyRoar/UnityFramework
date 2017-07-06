@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TinyRoar.Framework;
 using System.Threading;
+using UnityEngine.Events;
 
 namespace TinyRoar.Framework
 {
@@ -33,6 +34,8 @@ namespace TinyRoar.Framework
         public static Thread MainThread = null;
 
         public bool UseViewManager;
+
+        public UnityEvent AfterInitialized;
 
         protected override void Awake()
         {
@@ -75,6 +78,8 @@ namespace TinyRoar.Framework
 
             if (UseViewManager)
                 ViewManager.Instance.Init();
+
+            AfterInitialized.Invoke();
         }
 
         /// <summary>
