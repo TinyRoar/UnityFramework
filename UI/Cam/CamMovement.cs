@@ -292,6 +292,7 @@ namespace TinyRoar.Framework
 
         private void DoMovementViaAnimation(Vector3 mousePos)
         {
+            _moveForwardIsRunning = false;
             var mouseRelative = mousePos.y / Screen.height;
             step += mouseRelative * size;
             step = Mathf.Clamp(step, 0, stop);
@@ -314,6 +315,30 @@ namespace TinyRoar.Framework
         public void ResetStop()
         {
             stop = stopDefault;
+        }
+
+        public void MoveCameraForwardUntilStop(float speed)
+        {
+            if(_moveForwardIsRunning)
+                return;
+            StartCoroutine(MoveForwardAnim(speed));
+        }
+
+        private bool _moveForwardIsRunning = false;
+        private IEnumerator MoveForwardAnim(float speed)
+        {
+            yield return new WaitForEndOfFrame();
+
+            _moveForwardIsRunning = true;
+            while (step < stop)
+            {
+                step += speed * Time.deltaTime;
+                step = Mathf.Clamp(step, 0, stop);
+                SetAnimationValue(step);
+                yield return new WaitForEndOfFrame();
+            }
+            _moveForwardIsRunning = false;
+            yield return null;
         }
 
     }
