@@ -36,7 +36,7 @@ namespace TinyRoar.Framework
         [SerializeField] private Camera _cameraComponent;
         [SerializeField] private bool NewMovement;
         [SerializeField] private bool MovementViaAnimation;
-        [SerializeField] private string animationName = "";
+        [SerializeField] private List<string> animationNames;
         [SerializeField] private List<Layer> WorkOnlyFollowingLayerOpened;
 
         private Animator _animator;
@@ -47,7 +47,9 @@ namespace TinyRoar.Framework
         private float size = 1f;
         private float stop;
         private float stopDefault = 0.9999f;
-        private string DatakeyAnimCam = "AnimationCameraTimelinePosition";
+        private string DatakeyAnimCamPos = "AnimationCameraTimelinePosition";
+        private string DatakeyAnimCamIndex = "AnimationCameraTimelineIndex";
+        private int _animationIndex = 0;
 
         void Awake()
         {
@@ -79,9 +81,10 @@ namespace TinyRoar.Framework
 
         public void SetMovementToSaveGame()
         {
-            if (MovementViaAnimation && DataManagement.Instance.CheckItem(DatakeyAnimCam))
+            if (MovementViaAnimation && DataManagement.Instance.CheckItem(DatakeyAnimCamPos))
             {
-                float oldValue = DataManagement.Instance.Get(DatakeyAnimCam).Float;
+                float oldValue = DataManagement.Instance.Get(DatakeyAnimCamPos).Float;
+                _animationIndex = DataManagement.Instance.Get(DatakeyAnimCamIndex).Int;
                 step = oldValue;
                 SetAnimationValue(oldValue);
             }
@@ -295,19 +298,30 @@ namespace TinyRoar.Framework
 
         private void DoMovementViaAnimation(Vector3 mousePos)
         {
+#if UNITY_EDITOR
+            mousePos *= 3;
+#endif
             _moveForwardIsRunning = false;
             var mouseRelative = mousePos.y / Screen.height;
             step += mouseRelative * size;
             step = Mathf.Clamp(step, 0, stop);
-            DataManagement.Instance.Set(DatakeyAnimCam, step);
-            SetAnimationValue(step);
+            int stepRounded = (int) step;
+            if (stepRounded != _animationIndex)
+                SetAnimationIndex(stepRounded);
+            DataManagement.Instance.Set(DatakeyAnimCamPos, step);
+            var step2 = step % 1;
+            SetAnimationValue(step2);
+        }
+
+        private void SetAnimationIndex(int index)
+        {
+            DataManagement.Instance.Set(DatakeyAnimCamIndex, index);
+            _animationIndex = index;
         }
 
         private void SetAnimationValue(float step)
         {
-            Print.Log(animationName);
-            Print.Log(step);
-            _animator.Play(animationName, 0, step);
+            _animator.Play(animationNames[_animationIndex], 0, step);
         }
 
         void OnTriggerEnter(Collider other)
@@ -319,7 +333,7 @@ namespace TinyRoar.Framework
 
         public void ResetStop()
         {
-            stop = stopDefault;
+            stop = stopDefault * animationNames.Count;
         }
 
         public void MoveCameraForwardUntilStop(float speed)
