@@ -73,15 +73,18 @@ namespace TinyRoar.Framework
 
             Events.Instance.OnLayerChange += OnLayerChange;
 
+            ResetStop();
+            UpdateMovement();
+        }
+
+        public void SetMovementToSaveGame()
+        {
             if (MovementViaAnimation && DataManagement.Instance.CheckItem(DatakeyAnimCam))
             {
                 float oldValue = DataManagement.Instance.Get(DatakeyAnimCam).Float;
                 step = oldValue;
                 SetAnimationValue(oldValue);
             }
-
-            ResetStop();
-            UpdateMovement();
         }
 
         private bool _isEnabled = false;
@@ -302,6 +305,8 @@ namespace TinyRoar.Framework
 
         private void SetAnimationValue(float step)
         {
+            Print.Log(animationName);
+            Print.Log(step);
             _animator.Play(animationName, 0, step);
         }
 
