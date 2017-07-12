@@ -80,7 +80,10 @@ public class MakeScreenshots : EditorWindow
                 Debug.Log("saving " + filename + "_" + resolutions[resIndex].x + "x" + resolutions[resIndex].y + ".png");
 
                 // make screenshot for resolution
+                ScreenCapture.CaptureScreenshot(filename + "_" + resolutions[resIndex].x + "x" + resolutions[resIndex].y + ".png", 4);
+#if UNITY_5
                 Application.CaptureScreenshot(filename + "_" + resolutions[resIndex].x + "x" + resolutions[resIndex].y + ".png", 4);
+#endif
                 canvasSet = false;
             }
 
