@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TinyRoar.Framework;
@@ -19,13 +20,13 @@ namespace TinyRoar.Framework
 
         private float orthographicSize;
 
-        private CamMovement CamMovement;
+        private MoveCam MoveCam;
         private Camera cameraComponent { get; set; }
 
         void Start()
         {
             cameraComponent = this.GetComponent<Camera>();
-            CamMovement = this.GetComponent<CamMovement>();
+            MoveCam = this.GetComponent<MoveCam>();
             UpdateCamZoom(BaseSize);
         }
 
@@ -39,13 +40,20 @@ namespace TinyRoar.Framework
 
         public void DoDisable()
         {
-            Inputs.Instance.OnTouchMove -= TouchMove;
-            Updater.Instance.OnLateUpdate -= DoUpdate;
+            try
+            {
+                Inputs.Instance.OnTouchMove -= TouchMove;
+                Updater.Instance.OnLateUpdate -= DoUpdate;
+            }
+            catch (Exception)
+            {
+                // do nothing
+            }
         }
 
         void OnDestroy()
         {
-            //DoDisable();
+            DoDisable();
         }
 
         void TouchMove()
@@ -98,11 +106,11 @@ namespace TinyRoar.Framework
             orthographicSize = newSize;
             cameraComponent.orthographicSize = orthographicSize;
 
-            if (CamMovement != null)
-            {
-                CamMovement.UpdateMinMax();
-                CamMovement.UpdateMovement();
-            }
+            if (MoveCam == null)
+                return;
+
+            MoveCam.UpdateMinMax();
+            MoveCam.UpdateMovement();
         }
     }
 }
