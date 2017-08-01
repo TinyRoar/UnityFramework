@@ -17,15 +17,16 @@ namespace TinyRoar.Framework
 
         [SerializeField]
         private int mouseMinY = -999;
+        [SerializeField]
+        protected Camera _cameraComponent;
 
         private bool _drag;
         protected Vector3 _origin;
-        protected Camera _cameraComponent;
         public bool _isEnabled;
 
         protected virtual void Awake()
         {
-            if(_cameraComponent == null)
+            if (_cameraComponent == null)
                 _cameraComponent = this.GetComponent<Camera>();
         }
 
