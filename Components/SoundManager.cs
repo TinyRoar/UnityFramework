@@ -30,7 +30,7 @@ namespace TinyRoar.Framework
         {
             get
             {
-                return this._allowMusic; 
+                return this._allowMusic;
             }
             private set
             {
@@ -57,7 +57,7 @@ namespace TinyRoar.Framework
         void Start()
         {
             // Check from DataManagement if Sound key is set, if not enable Sound else load Data
-            if(DataManagement.Instance.CheckItem(GameConfig.KeySoundAllowmusic) == false)
+            if (DataManagement.Instance.CheckItem(GameConfig.KeySoundAllowmusic) == false)
                 this._allowMusic = true;
             else
                 this._allowMusic = DataManagement.Instance.Get(GameConfig.KeySoundAllowmusic).Bool;
@@ -122,7 +122,7 @@ namespace TinyRoar.Framework
             }
             if (index == -1)
             {
-                if(GameConfig.Instance.Debug && name != "")
+                if (GameConfig.Instance.Debug && name != "")
                     Debug.LogWarning("Sound '" + name + "' not found :'(");
                 return null;
             }
@@ -198,6 +198,14 @@ namespace TinyRoar.Framework
 
             if (OnMusicPlay != null)
                 OnMusicPlay();
+        }
+
+        internal void Mute(bool state)
+        {
+            if(state)
+                AudioListener.volume = 0;
+            else
+                AudioListener.volume = 1;
         }
 
     }
