@@ -6,14 +6,12 @@ namespace TinyRoar.Framework
 {
     public class CamConfig : MonoSingleton<CamConfig>
     {
-        [SerializeField] private bool Enabled = true;
-
-        public CamMovement CamMovement { get; set; }
+        [SerializeField]
+        private bool Enabled = true;
 
         void Start()
         {
             OnChange();
-            CamMovement = this.GetComponent<CamMovement>();
         }
 
         private void OnChange()
