@@ -54,8 +54,10 @@ namespace TinyRoar.Framework
         }
 
         // Initialize
-        void Start()
+        protected override void Awake()
         {
+            base.Awake();
+
             // Check from DataManagement if Sound key is set, if not enable Sound else load Data
             if (DataManagement.Instance.CheckItem(GameConfig.KeySoundAllowmusic) == false)
                 this._allowMusic = true;
