@@ -73,8 +73,7 @@ namespace TinyRoar.Framework
             // show layers
             ShowLayerEntries();
 
-            if (CloseAtEsc)
-                Inputs.Instance.OnKeyDown += OnKeyDown;
+            Inputs.Instance.OnKeyDown += OnKeyDown;
 
             if (UseViewManager)
                 ViewManager.Instance.Init();
@@ -111,8 +110,17 @@ namespace TinyRoar.Framework
 
         private void OnKeyDown()
         {
-            if (Input.GetKeyDown("escape"))
+            if (Input.GetKeyDown("escape") && CloseAtEsc)
                 Application.Quit();
+
+            if (Input.GetKeyDown(KeyCode.F1) && Application.isEditor)
+                Time.timeScale = 0.25f;
+
+            if (Input.GetKeyDown(KeyCode.F2) && Application.isEditor)
+                Time.timeScale = 1f;
+
+            if (Input.GetKeyDown(KeyCode.F3) && Application.isEditor)
+                Time.timeScale = 100f;
         }
 
         protected override void OnApplicationQuit()
