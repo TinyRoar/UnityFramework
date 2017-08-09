@@ -57,6 +57,7 @@ namespace TinyRoar.Framework
                 endEvent();
                 return -1;
             }
+            time /= Time.timeScale;
 
             // insert into list
             this._endTimer.Add(nextTimerId, endEvent);
