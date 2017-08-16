@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
-using TinyRoar.Framework;
 using System;
-using System.Collections.Generic;
 
 /*
  * Move Camera Script
