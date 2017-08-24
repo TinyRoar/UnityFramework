@@ -71,6 +71,17 @@ namespace TinyRoar.Framework
             }
         }
 
+        public int PosInt
+        {
+            get
+            {
+                var value = Int;
+                if (value < 0)
+                    value = 0;
+                return value;
+            }
+        }
+
         public Int64 Int64
         {
             get
@@ -126,6 +137,17 @@ namespace TinyRoar.Framework
                     UnityEngine.Debug.LogWarning("Data-Key " + Key + " isn't an int :'(");
                 }
                 return 0;
+            }
+        }
+
+        public float PosFloat
+        {
+            get
+            {
+                var value = Float;
+                if (value < 0)
+                    value = 0;
+                return value;
             }
         }
 
