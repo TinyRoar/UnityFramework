@@ -6,7 +6,6 @@ namespace TinyRoar.Framework
 {
     public class SoundManager : MonoSingleton<SoundManager>
     {
-
         public event Action OnMusicStop;
         public event Action OnMusicPlay;
 
@@ -23,6 +22,8 @@ namespace TinyRoar.Framework
 
         // Variables
         private bool _musicPlaying = true;
+        private float _overridePitch = 0f;
+
 
         // Properties
         private bool _allowMusic = true;
@@ -80,11 +81,17 @@ namespace TinyRoar.Framework
             AudioSource source = go.AddComponent<AudioSource>();
             source.clip = clip;
             source.volume = volume;
-            source.pitch = pitch;
+
+            if (_overridePitch != 0)
+                source.pitch = _overridePitch;
+            else
+                source.pitch = pitch;
+
             if (delay == 0)
                 source.Play();
             else
                 source.PlayDelayed(delay);
+
             source.loop = loop;
 
             // Destroy after playing
@@ -130,7 +137,6 @@ namespace TinyRoar.Framework
             }
 
             return Play(AudioList[index], volume, 1f, loop, delay, deleteAfterSec);
-
         }
 
         internal void EnableDisableSound(SoundType SoundType)
@@ -177,6 +183,21 @@ namespace TinyRoar.Framework
             Destroy(audioSource.gameObject);
         }
 
+        /// <summary>
+        /// Override Pitch for all AudioSources
+        /// </summary>
+        /// <param name="pitch"></param>
+        public void OverridePitch(float pitch)
+        {
+            AudioSource[] audioSources = GetComponentsInChildren<AudioSource>(true);
+
+            foreach (var item in audioSources)
+            {
+                item.pitch = pitch;
+                _overridePitch = pitch;
+            }
+        }
+
         // pause sounds, example: while playing ads
         internal void StopMusic()
         {
@@ -209,7 +230,6 @@ namespace TinyRoar.Framework
             else
                 AudioListener.volume = 1;
         }
-
     }
 
 }
