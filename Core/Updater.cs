@@ -68,9 +68,6 @@ namespace TinyRoar.Framework
                     method();
                 NextFrameList.RemoveAt(i);
             }
-
-            //print(NextFrameList.Count);
-            //NextFrameList.Clear();
         }
 
     }
