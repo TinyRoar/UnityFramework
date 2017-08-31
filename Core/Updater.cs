@@ -70,7 +70,7 @@ namespace TinyRoar.Framework
             }
 
             //print(NextFrameList.Count);
-            NextFrameList.Clear();
+            //NextFrameList.Clear();
         }
 
     }
