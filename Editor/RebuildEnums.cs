@@ -76,9 +76,23 @@ public class RebuildEnums : EditorWindow
 
     private static void WriteFile()
     {
-        // set filepath and write the lines
-        string filePath = Application.dataPath + "/Scripts/Util/" + "GeneratedEnums.cs";
-        MonoBehaviour.print(filePath);
+
+        Directory.GetFiles(Application.dataPath);
+        string filePath;
+        string[] generateEnumArray = AssetDatabase.FindAssets("GeneratedEnums");
+
+        if (generateEnumArray.Length > 0)
+        {
+            filePath = AssetDatabase.GUIDToAssetPath(generateEnumArray[0]);
+        }
+        else
+        {
+            // set filepath and write the lines
+            filePath = Application.dataPath + "/GeneratedEnums.cs";
+            Debug.Log(filePath);
+            Debug.Log("GeneratedEnums.cs was created at: '" + Application.dataPath + "'.\n" +
+                      "You should consider to move it to your other script files.");
+        }
 
         StreamWriter file = new StreamWriter(filePath);
         file.WriteLine(environmentsEnums);
