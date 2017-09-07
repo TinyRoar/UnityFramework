@@ -83,23 +83,22 @@ namespace TinyRoar.Framework
         }
 
         private float time = 0;
-        private float waitMinSec = 1;
+        private float waitMinSec = 2;
         private float waitMaxSec = 5;
         private void SaveEndOfFrame()
         {
             if (!_doSaving)
             {
-                _doSaving = false;
                 Updater.Instance.OnLateUpdate -= SaveEndOfFrame;
                 return;
             }
 
             // if enough rest-time in this frame and wait min. 1 sec and max 5 sec
-            if ((!(Time.deltaTime <= 1f/30f) || !(Time.time > time + waitMinSec)) && Time.time < time + waitMaxSec)
-                return;
-
-            // do saving...
-            DoSaving();
+            if (Time.time > time + waitMaxSec || (Time.time > time + waitMinSec && Time.deltaTime > 1f / 30f))
+            {
+                // do saving...
+                DoSaving();
+            }
         }
 
         // do saving logic
