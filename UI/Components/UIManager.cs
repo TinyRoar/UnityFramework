@@ -201,6 +201,8 @@ namespace TinyRoar.Framework
                 this.Show(_environmentList[_endTimerEnvironment]);
             ActiveEnvironment = _endTimerEnvironment;
 
+            Events.Instance.FireEnvironmentChange(ActiveEnvironment);
+
             // make sure to switch to active camera
             foreach (Camera cam in Camera.allCameras)
             {

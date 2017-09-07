@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using TinyRoar.Framework;
 
@@ -44,5 +45,16 @@ namespace TinyRoar.Framework
             if (OnLayerChange != null)
                 OnLayerChange(layer, action);
         }
+
+        // Envionment
+        public delegate void EnvironmentAction(GameEnvironment environment);
+        public event EnvironmentAction OnEnvironmentChange;
+
+        public void FireEnvironmentChange(GameEnvironment environment)
+        {
+            if (OnEnvironmentChange != null)
+                OnEnvironmentChange(environment);
+        }
+
     }
 }
