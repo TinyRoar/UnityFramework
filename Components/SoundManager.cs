@@ -119,7 +119,7 @@ namespace TinyRoar.Framework
             }
 
             if (GameConfig.Instance.Debug && name != "")
-                Debug.LogWarning("Try playing sound '" + name + "' ");
+                Debug.Log("Playing sound '" + name + "' ");
 
             var audioClip = GetAudioClip(name);
 
