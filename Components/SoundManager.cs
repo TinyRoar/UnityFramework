@@ -19,11 +19,11 @@ namespace TinyRoar.Framework
         // Serializable
         public List<AudioClip> AudioList;
         public List<string> BgMusic; // a list of all possible background musics to stop if music should stop
+        public List<AudioSource> ExternalAudioSources; // a list of all AudioSource componenets created by an artist
 
         // Variables
         private bool _musicPlaying = true;
         private float _overridePitch = 0f;
-
 
         // Properties
         private bool _allowMusic = true;
@@ -121,26 +121,22 @@ namespace TinyRoar.Framework
             if (GameConfig.Instance.Debug && name != "")
                 Debug.LogWarning("Try playing sound '" + name + "' ");
 
-            var index = -1;
-            for (int i = 0; i < AudioList.Count; i++)
+            var audioClip = GetAudioClip(name);
+
+            return Play(audioClip, volume, 1f, loop, delay, deleteAfterSec);
+        }
+
+        private AudioClip GetAudioClip(string name)
+        {
+            for (var i = 0; i < AudioList.Count; i++)
             {
                 if (AudioList[i] == null)
                     continue;
-                if (AudioList[i].name == name)
-                {
-                    index = i;
-                    break;
-                }
+                if (AudioList[i].name != name)
+                    continue;
+                return AudioList[i];
             }
-
-            if (index == -1)
-            {
-                if (GameConfig.Instance.Debug && name != "")
-                    Debug.LogWarning("Sound '" + name + "' not found :'(");
-                return null;
-            }
-
-            return Play(AudioList[index], volume, 1f, loop, delay, deleteAfterSec);
+            return null;
         }
 
         internal void EnableDisableSound(SoundType SoundType)
@@ -167,6 +163,7 @@ namespace TinyRoar.Framework
 
                     break;
                 case SoundManager.SoundType.Soundeffect:
+                    MuteExternalAudioSource(AllowSoundeffect);
                     AllowSoundeffect = !AllowSoundeffect;
                     break;
             }
@@ -174,11 +171,21 @@ namespace TinyRoar.Framework
 
         private void DestroyMusicObjects()
         {
-            foreach (var item in BgMusic)
+            for (var i = 0; i < BgMusic.Count; i++)
             {
+                var item = BgMusic[i];
                 var obj = this.transform.Find("Audio: " + item);
                 if (obj != null)
                     Destroy(obj.gameObject);
+            }
+        }
+
+        private void MuteExternalAudioSource(bool doMute)
+        {
+            for (var i = 0; i < ExternalAudioSources.Count; i++)
+            {
+                var audioSource = ExternalAudioSources[i];
+                audioSource.mute = doMute;
             }
         }
 
@@ -203,7 +210,7 @@ namespace TinyRoar.Framework
         }
 
         // pause sounds, example: while playing ads
-        internal void StopMusic()
+        public void StopMusic()
         {
             if (!AllowMusic || !_musicPlaying)
                 return;
@@ -211,12 +218,13 @@ namespace TinyRoar.Framework
             _musicPlaying = false;
 
             DestroyMusicObjects();
+            MuteExternalAudioSource(true);
             if (OnMusicStop != null)
                 OnMusicStop();
         }
 
         // opposite of PauseSounds
-        internal void RestoreSounds()
+        public void RestoreSounds()
         {
             if (_musicPlaying)
                 return;
@@ -225,9 +233,10 @@ namespace TinyRoar.Framework
 
             if (OnMusicPlay != null)
                 OnMusicPlay();
+            MuteExternalAudioSource(false);
         }
 
-        internal void Mute(bool isMute)
+        public void Mute(bool isMute)
         {
             AudioListener.volume = isMute ? 0 : 1;
         }
