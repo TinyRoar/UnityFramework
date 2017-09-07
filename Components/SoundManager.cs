@@ -74,20 +74,20 @@ namespace TinyRoar.Framework
         private AudioSource Play(AudioClip clip, float volume, float pitch, bool loop = false, float delay = 0, float deleteAfterSec = 0)
         {
             //Create an empty game object
-            GameObject go = new GameObject("Audio: " + clip.name);
+            var go = new GameObject("Audio: " + clip.name);
             go.transform.parent = this.transform;
 
             //Create the source
-            AudioSource source = go.AddComponent<AudioSource>();
+            var source = go.AddComponent<AudioSource>();
             source.clip = clip;
             source.volume = volume;
 
-            if (_overridePitch != 0)
+            if (Math.Abs(_overridePitch) > 0.01f)
                 source.pitch = _overridePitch;
             else
                 source.pitch = pitch;
 
-            if (delay == 0)
+            if (Math.Abs(delay) < 0.01f)
                 source.Play();
             else
                 source.PlayDelayed(delay);
@@ -95,7 +95,7 @@ namespace TinyRoar.Framework
             source.loop = loop;
 
             // Destroy after playing
-            if (loop == false || deleteAfterSec != 0)
+            if (loop == false || Math.Abs(deleteAfterSec) > 0.01f)
             {
                 Destroy(go, clip.length + delay + deleteAfterSec);
             }
@@ -118,7 +118,10 @@ namespace TinyRoar.Framework
                     break;
             }
 
-            int index = -1;
+            if (GameConfig.Instance.Debug && name != "")
+                Debug.LogWarning("Try playing sound '" + name + "' ");
+
+            var index = -1;
             for (int i = 0; i < AudioList.Count; i++)
             {
                 if (AudioList[i] == null)
@@ -129,6 +132,7 @@ namespace TinyRoar.Framework
                     break;
                 }
             }
+
             if (index == -1)
             {
                 if (GameConfig.Instance.Debug && name != "")
@@ -189,7 +193,7 @@ namespace TinyRoar.Framework
         /// <param name="pitch"></param>
         public void OverridePitch(float pitch)
         {
-            AudioSource[] audioSources = GetComponentsInChildren<AudioSource>(true);
+            var audioSources = GetComponentsInChildren<AudioSource>(true);
 
             foreach (var item in audioSources)
             {
@@ -223,12 +227,9 @@ namespace TinyRoar.Framework
                 OnMusicPlay();
         }
 
-        internal void Mute(bool state)
+        internal void Mute(bool isMute)
         {
-            if(state)
-                AudioListener.volume = 0;
-            else
-                AudioListener.volume = 1;
+            AudioListener.volume = isMute ? 0 : 1;
         }
     }
 
