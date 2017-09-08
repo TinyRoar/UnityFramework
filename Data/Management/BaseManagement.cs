@@ -83,8 +83,8 @@ namespace TinyRoar.Framework
         }
 
         private float time = 0;
-        private float waitMinSec = 2;
-        private float waitMaxSec = 5;
+        private float waitMinSec = 1;
+        private float waitMaxSec = 2;
         private void SaveEndOfFrame()
         {
             if (!_doSaving)
