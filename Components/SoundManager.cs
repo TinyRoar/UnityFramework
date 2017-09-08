@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using UnityEngine.SocialPlatforms;
 
 namespace TinyRoar.Framework
 {
@@ -20,6 +21,7 @@ namespace TinyRoar.Framework
         public List<AudioClip> AudioList;
         public List<string> BgMusic; // a list of all possible background musics to stop if music should stop
         public List<AudioSource> ExternalAudioSources; // a list of all AudioSource componenets created by an artist
+        public List<AudioVolume> AudioVolumes;
 
         // Variables
         private bool _musicPlaying = true;
@@ -71,6 +73,29 @@ namespace TinyRoar.Framework
                 this._allowSoundeffect = DataManagement.Instance.Get(GameConfig.KeySoundAlloweffects).Bool;
         }
 
+        public AudioSource Play(string name, SoundType type, bool loop = false, float volume = 1.0f, float delay = 0, float deleteAfterSec = 0)
+        {
+            // Check if Music / Sounds are not disabled by LayerManager
+            switch (type)
+            {
+                case SoundType.Music:
+                    if (AllowMusic == false)
+                        return null;
+                    break;
+                case SoundType.Soundeffect:
+                    if (AllowSoundeffect == false)
+                        return null;
+                    break;
+            }
+
+            if (GameConfig.Instance.Debug && name != "")
+                Debug.Log("Playing sound '" + name + "' ");
+
+            var audioClip = GetAudioClip(name);
+
+            return Play(audioClip, volume, 1f, loop, delay, deleteAfterSec);
+        }
+
         private AudioSource Play(AudioClip clip, float volume, float pitch, bool loop = false, float delay = 0, float deleteAfterSec = 0)
         {
             //Create an empty game object
@@ -80,7 +105,7 @@ namespace TinyRoar.Framework
             //Create the source
             var source = go.AddComponent<AudioSource>();
             source.clip = clip;
-            source.volume = volume;
+            source.volume = GetVolume(clip.name, volume);
 
             if (Math.Abs(_overridePitch) > 0.01f)
                 source.pitch = _overridePitch;
@@ -103,27 +128,14 @@ namespace TinyRoar.Framework
             return source;
         }
 
-        public AudioSource Play(string name, SoundType type, bool loop = false, float volume = 1.0f, float delay = 0, float deleteAfterSec = 0)
+        private float GetVolume(string name, float fallBackVolume)
         {
-            // Check if Music / Sounds are not disabled by LayerManager
-            switch (type)
+            for (var i = 0; i < AudioVolumes.Count; i++)
             {
-                case SoundType.Music:
-                    if (AllowMusic == false)
-                        return null;
-                    break;
-                case SoundType.Soundeffect:
-                    if (AllowSoundeffect == false)
-                        return null;
-                    break;
+                if (AudioVolumes[i].Name == name)
+                    return AudioVolumes[i].Volume;
             }
-
-            if (GameConfig.Instance.Debug && name != "")
-                Debug.Log("Playing sound '" + name + "' ");
-
-            var audioClip = GetAudioClip(name);
-
-            return Play(audioClip, volume, 1f, loop, delay, deleteAfterSec);
+            return fallBackVolume;
         }
 
         private AudioClip GetAudioClip(string name)
@@ -240,6 +252,14 @@ namespace TinyRoar.Framework
         {
             AudioListener.volume = isMute ? 0 : 1;
         }
+    }
+
+    [Serializable]
+    public struct AudioVolume
+    {
+        public string Name;
+        [Range(0.0f, 1.0f)]
+        public float Volume;
     }
 
 }
