@@ -19,14 +19,13 @@ public class DeactivateButtonOnLayer : MonoBehaviour {
     {
         if (layer == LayerManager.Instance.GetLayerEntry(DeactivateOnLayer).Layer)
         {
-            // make sure button is enabled
-            btn.enabled = true;
-
             if (action == UIAction.Show)
                 btn.interactable = false;
 
             if (action == UIAction.Hide)
+            {
                 btn.interactable = true;
+            }
         }
     }
 }

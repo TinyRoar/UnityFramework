@@ -66,6 +66,8 @@ namespace TinyRoar.Framework
                 var method = NextFrameList[i];
                 if (method != null)
                     method();
+                else
+                    UnityEngine.Debug.LogWarning("Timer Callback Method is null");
                 NextFrameList.RemoveAt(i);
             }
         }
