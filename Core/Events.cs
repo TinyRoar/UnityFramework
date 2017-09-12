@@ -19,7 +19,7 @@ namespace TinyRoar.Framework
                     return;
                 GameplayStatus oldStatus = _gameplayStatus;
                 _gameplayStatus = value;
-                if (GameConfig.Instance.Debug)
+                if (InitManager.Instance.Debug)
                     Debug.Log("GameplayStatus=" + value);
                 Events.Instance.FireGameplayStatusChange(oldStatus, _gameplayStatus);
             }

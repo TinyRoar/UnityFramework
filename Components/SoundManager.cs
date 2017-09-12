@@ -88,7 +88,7 @@ namespace TinyRoar.Framework
                     break;
             }
 
-            if (GameConfig.Instance.Debug && name != "")
+            if (InitManager.Instance.SoundDebug && name != "")
                 Debug.Log("Playing sound '" + name + "' ");
 
             var audioClip = GetAudioClip(name);

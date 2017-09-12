@@ -30,17 +30,7 @@ namespace TinyRoar.Framework
             }
         }
 
-        public bool Debug
-        {
-            get
-            {
-                return InitManager.Instance.Debug;
-            }
-        }
-
         public const string KeySoundAllowmusic = "AllowMusic";
         public const string KeySoundAlloweffects = "AllowEffects";
-
-
     }
 }
