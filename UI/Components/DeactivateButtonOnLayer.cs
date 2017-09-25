@@ -9,7 +9,7 @@ public class DeactivateButtonOnLayer : MonoBehaviour {
     public LayerConfig DeactivateOnLayer;
     private Button btn;
 
-	void Start ()
+	void Awake ()
     {
         btn = GetComponent<Button>();
         Events.Instance.OnLayerChange += LayerChange;
