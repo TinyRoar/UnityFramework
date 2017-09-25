@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using TinyRoar.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -14,8 +15,8 @@ public class RebuildEnums : EditorWindow
         MonoBehaviour.print("Reloading Layer and Environments...");
 
         // init
-        environmentsEnums = "public enum GameEnvironment{None,";
-        layerEnums = "public enum Layer{None,";
+        environmentsEnums = "public enum GameEnvironment" + Environment.NewLine + "{" + Environment.NewLine + "    None," + Environment.NewLine;
+        layerEnums = "public enum Layer" + Environment.NewLine + "{" + Environment.NewLine + "    None," + Environment.NewLine;
 
         CreateEnvironmentEnums();
         CreateLayerEnums();
@@ -35,8 +36,8 @@ public class RebuildEnums : EditorWindow
 
         for (int i = 0; i < childCount; i++)
         {
-            environmentsEnums += tempTransform.GetChild(i).name;
-            environmentsEnums += ",";
+            environmentsEnums += "    " + tempTransform.GetChild(i).name;
+            environmentsEnums += "," + Environment.NewLine;
 
             if (i == childCount - 1)
                 environmentsEnums += "}";
@@ -66,8 +67,8 @@ public class RebuildEnums : EditorWindow
                 Debug.Log("Added LayerConfig to " + tempTransform.GetChild(i).name);
             }
 
-            layerEnums += tempTransform.GetChild(i).name;
-            layerEnums += ",";
+            layerEnums += "    " + tempTransform.GetChild(i).name;
+            layerEnums += "," + Environment.NewLine;
 
             if (i == childCount - 1)
                 layerEnums += "}";
