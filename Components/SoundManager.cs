@@ -56,6 +56,11 @@ namespace TinyRoar.Framework
             }
         }
 
+        public bool GetStatus(SoundType soundType)
+        {
+            return soundType == SoundType.Music ? AllowMusic : AllowSoundeffect;
+        }
+
         // Initialize
         protected override void Awake()
         {
