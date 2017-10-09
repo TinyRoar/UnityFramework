@@ -112,14 +112,14 @@ namespace TinyRoar.Framework
 
         public void Remove(string key)
         {
-            (this.Collection as PairCollection).Remove(new Pair(key));
-            doSaving = true;
+            if((this.Collection as PairCollection).Remove(new Pair(key)))
+                doSaving = true;
         }
 
         public void Remove(Pair pair)
         {
-            (this.Collection as PairCollection).Remove(pair);
-            doSaving = true;
+            if((this.Collection as PairCollection).Remove(pair))
+                doSaving = true;
         }
 
     }
