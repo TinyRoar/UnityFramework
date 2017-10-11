@@ -72,13 +72,13 @@ namespace TinyRoar.Framework
 
         private void OnLeftMouseMove()
         {
-            if (Camera.main == null)
+            if (_cameraComponent == null)
                 return;
 
             if (_drag == false)
             {
                 _drag = true;
-                _origin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                _origin = _cameraComponent.ScreenToWorldPoint(Input.mousePosition);
             }
 
             // int variable
@@ -108,7 +108,7 @@ namespace TinyRoar.Framework
 
             }
 
-            if (Camera.main.ScreenToWorldPoint(Input.mousePosition).y < mouseMinY)
+            if (_cameraComponent.ScreenToWorldPoint(Input.mousePosition).y < mouseMinY)
                 return;
 
             mousePos *= -1;

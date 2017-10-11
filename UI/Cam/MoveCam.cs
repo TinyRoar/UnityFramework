@@ -60,7 +60,7 @@ public class MoveCam : CamMovement
     {
         if (NewMovement)
         {
-            Difference = (Camera.main.ScreenToWorldPoint(Input.mousePosition)) - Camera.main.transform.position;
+            Difference = (_cameraComponent.ScreenToWorldPoint(Input.mousePosition)) - _cameraComponent.transform.position;
             MoveAbsolute(_origin - Difference);
         }
         else

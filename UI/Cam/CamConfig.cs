@@ -1,17 +1,38 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using TinyRoar.Framework;
 
 namespace TinyRoar.Framework
 {
-    public class CamConfig : MonoSingleton<CamConfig>
+    public class CamConfig : MonoBehaviour
     {
         [SerializeField]
-        private bool Enabled = true;
+        private bool IsEnabled = true;
+
+        private static Action<bool> _enableEvent;
+
+        public static void SetEnable(bool status)
+        {
+            if (_enableEvent != null)
+                _enableEvent(status);
+        }
+
+        private static GameObject _activeCamConfig;
+        public static GameObject GetActive()
+        {
+            return _activeCamConfig;
+        }
 
         void Start()
         {
             OnChange();
+            _enableEvent += Enable;
+        }
+
+        void OnEnable()
+        {
+            _activeCamConfig = this.gameObject;
         }
 
         private void OnChange()
@@ -19,18 +40,18 @@ namespace TinyRoar.Framework
             ICam[] comps = this.GetComponents<ICam>();
             foreach (var comp in comps)
             {
-                if (Enabled)
+                if (IsEnabled)
                     comp.DoEnable();
                 else
                     comp.DoDisable();
             }
         }
 
-        public void SetEnabled(bool enabled)
+        public void Enable(bool status)
         {
-            if (Enabled == enabled)
+            if (IsEnabled == status)
                 return;
-            Enabled = enabled;
+            IsEnabled = status;
             OnChange();
         }
 
