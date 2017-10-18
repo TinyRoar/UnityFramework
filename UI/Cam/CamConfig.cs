@@ -24,10 +24,14 @@ namespace TinyRoar.Framework
             return _activeCamConfig;
         }
 
+        void Awake()
+        {
+            _enableEvent += Enable;
+        }
+
         void Start()
         {
             OnChange();
-            _enableEvent += Enable;
         }
 
         void OnEnable()
