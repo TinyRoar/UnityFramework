@@ -180,7 +180,7 @@ namespace TinyRoar.Framework
 
                     break;
                 case SoundManager.SoundType.Soundeffect:
-                    MuteExternalAudioSource(AllowSoundeffect);
+                    //MuteExternalAudioSource(AllowSoundeffect);
                     AllowSoundeffect = !AllowSoundeffect;
                     break;
             }
@@ -197,7 +197,7 @@ namespace TinyRoar.Framework
             }
         }
 
-        private void MuteExternalAudioSource(bool doMute)
+        public void MuteExternalAudioSource(bool doMute)
         {
             for (var i = 0; i < ExternalAudioSources.Count; i++)
             {
@@ -235,7 +235,7 @@ namespace TinyRoar.Framework
             _musicPlaying = false;
 
             DestroyMusicObjects();
-            MuteExternalAudioSource(true);
+            //MuteExternalAudioSource(true);
             if (OnMusicStop != null)
                 OnMusicStop();
         }
@@ -250,7 +250,7 @@ namespace TinyRoar.Framework
 
             if (OnMusicPlay != null)
                 OnMusicPlay();
-            MuteExternalAudioSource(false);
+            //MuteExternalAudioSource(false);
         }
 
         public void Mute(bool isMute)
