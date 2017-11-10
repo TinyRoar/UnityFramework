@@ -58,6 +58,12 @@ public class MoveCam : CamMovement
 
     protected override void DoAction(Vector2 mousePos)
     {
+        if (!_isEnabled)
+            return;
+
+        if (!gameObject.activeInHierarchy)
+            return;
+
         if (NewMovement)
         {
             Difference = (_cameraComponent.ScreenToWorldPoint(Input.mousePosition)) - _cameraComponent.transform.position;
