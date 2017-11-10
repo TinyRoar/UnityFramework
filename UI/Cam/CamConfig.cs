@@ -18,6 +18,12 @@ namespace TinyRoar.Framework
                 _enableEvent(status);
         }
 
+        private static GameObject _previousCamConfig;
+        public static GameObject GetPrevious()
+        {
+            return _previousCamConfig;
+        }
+
         private static GameObject _activeCamConfig;
         public static GameObject GetActive()
         {
@@ -36,6 +42,7 @@ namespace TinyRoar.Framework
 
         void OnEnable()
         {
+            _previousCamConfig = _activeCamConfig;
             _activeCamConfig = this.gameObject;
         }
 
