@@ -73,7 +73,7 @@ namespace TinyRoar.Framework
         {
             if(this.CheckItem(key))
                 return (this.Collection as PairCollection).Get(new Pair(key));
-            return new Pair(defaultValue);
+            return new Pair(key, defaultValue);
         }
 
         public Pair Get(string key, int defaultValue)
