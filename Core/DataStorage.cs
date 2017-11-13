@@ -228,6 +228,15 @@ namespace TinyRoar.Framework
             return tex;
         }
 
+        public byte[] LoadPngToByteArr(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                return File.ReadAllBytes(filePath);
+            }
+            return null;
+        }
+
     }
 
 }
