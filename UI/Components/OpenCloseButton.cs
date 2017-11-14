@@ -92,9 +92,16 @@ namespace TinyRoar.Framework
             if (GameplayStatus != GameplayStatus.None)
             {
                 if (Events.Instance.GameplayStatus == GameplayStatus)
-                    Events.Instance.GameplayStatus = OrToggleWithStatus;
+                {
+                    if (OrToggleWithStatus != GameplayStatus.None)
+                    {
+                        Events.Instance.GameplayStatus = OrToggleWithStatus;
+                    }
+                }
                 else
+                {
                     Events.Instance.GameplayStatus = GameplayStatus;
+                }
             }
         }
 
