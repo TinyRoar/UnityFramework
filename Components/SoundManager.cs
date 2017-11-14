@@ -201,6 +201,11 @@ namespace TinyRoar.Framework
         {
             for (var i = 0; i < ExternalAudioSources.Count; i++)
             {
+                if (ExternalAudioSources[i] == null)
+                {
+                    Debug.LogError("SoundManager missing ExternalAudioSources");
+                    continue;
+                }
                 var audioSource = ExternalAudioSources[i];
                 audioSource.mute = doMute;
             }
