@@ -27,6 +27,9 @@ namespace TinyRoar.Framework
         private GameEnvironment _endTimerEnvironment;
         private Dictionary<GameEnvironment, Transform> _environmentList;
 
+        private bool _timerStarted;
+        private Dictionary<Layer, UIAction> _delayed = new Dictionary<Layer, UIAction>();
+
         public Transform GetEnvironment(GameEnvironment env)
         {
             return _environmentList[env];
@@ -211,9 +214,6 @@ namespace TinyRoar.Framework
             }
         }
 
-        private bool _timerStarted = false;
-        private List<Layer> _hideLayerList = new List<Layer>();
-
         public void Switch(Layer layer, UIAction action = UIAction.Show, float delay = -1)
         {
             if (delay != -1)
@@ -238,10 +238,6 @@ namespace TinyRoar.Framework
             }
             else if (action == UIAction.Show)
             {
-                // check if layer is in hideLayerList for waiting
-                if (_hideLayerList.Contains(layer))
-                    _hideLayerList.Remove(layer);
-
                 // Delayed or not
                 if (_delay == 0 || LayerManager.Instance.IsNothingVisible())
                 {
@@ -251,7 +247,7 @@ namespace TinyRoar.Framework
                 else
                 {
                     // save for delayed animation
-                    AddHideLayerList(layer);
+                    AddHideLayerList(layer, action);
                 }
             }
         }
@@ -261,10 +257,14 @@ namespace TinyRoar.Framework
             Switch(LayerManager.Instance.GetLayerEntry(layerConfig).Layer, action, delay);
         }
 
-        private void AddHideLayerList(Layer layer)
+        private void AddHideLayerList(Layer layer, UIAction action)
         {
+            // check if layer is in hideLayerList for waiting
+            if (_delayed.ContainsKey(layer))
+                _delayed.Remove(layer);
+
             // Save next Layer temporary
-            _hideLayerList.Add(layer);
+            _delayed.Add(layer, action);
 
             // check if timer already started
             if (_timerStarted == false)
@@ -279,11 +279,10 @@ namespace TinyRoar.Framework
         // Timer End event in Update Loop of next frame
         private void TimerEndLayer()
         {
-            int count = _hideLayerList.Count;
-            for (var i = 0; i < count; i++)
+            foreach (var delay in _delayed)
             {
-                Layer layer = _hideLayerList[i];
-                UIAction action = LayerManager.Instance.GetToggledStatus(layer);
+                var layer = delay.Key;
+                var action = delay.Value;
                 if (action == UIAction.Hide)
                 {
                     // important: do trigger action/event first, then hide it
@@ -297,7 +296,7 @@ namespace TinyRoar.Framework
             }
 
             // reset
-            _hideLayerList.Clear();
+            _delayed.Clear();
             _timerStarted = false;
         }
 
@@ -314,7 +313,6 @@ namespace TinyRoar.Framework
                 Timer.Instance.Add(blendDelay, TimerEndBlende);
             else
                 TimerEndBlende();
-
         }
 
         private void TimerEndBlende()
@@ -376,13 +374,10 @@ namespace TinyRoar.Framework
                 }
 
                 LayerManager.Instance.SetAction(layer, action);
-
             }
             // Fade Out animation
             else
             {
-                //bool isAnimation = false;
-                // check if UIConfig Component exists
                 LayerEntry layerEntry = LayerManager.Instance.GetLayerEntry(layer);
                 if (layerEntry == null)
                 {
@@ -407,7 +402,6 @@ namespace TinyRoar.Framework
                 }
 
                 // save for delayed animation
-                //if (isAnimation == false)
                 if(delay == 0)
                 {
                     this.Hide(layer);
@@ -415,7 +409,7 @@ namespace TinyRoar.Framework
                 }
                 else
                 {
-                    AddHideLayerList(layer);
+                    AddHideLayerList(layer, action);
                 }
             }
         }
@@ -448,8 +442,8 @@ namespace TinyRoar.Framework
                 Debug.LogWarning("Layer named " + layer + " not found");
                 return;
             }
-            //if (GameConfig.Instance.Debug)
-            //    Debug.LogWarning("Show(" + layerEntry.Layer + ")");
+            if (InitManager.Instance.UIDebug)
+                Debug.LogWarning("Show(" + layerEntry.Layer + ")");
             this.Show(layerEntry.GameObject);
         }
 
@@ -485,8 +479,8 @@ namespace TinyRoar.Framework
                 Debug.LogWarning("Layer named " + layer + " not found");
                 return;
             }
-            //if (GameConfig.Instance.Debug)
-            //    Debug.LogWarning("Hide(" + layerEntry.Layer + ")");
+            if (InitManager.Instance.UIDebug)
+                Debug.LogWarning("Hide(" + layerEntry.Layer + ")");
             this.Hide(layerEntry.GameObject);
         }
 

@@ -29,6 +29,8 @@ namespace TinyRoar.Framework
 
         public bool SoundDebug = false;
 
+        public bool UIDebug = false;
+
         public bool UseAnalytics = false;
 
         public bool CloseAtEsc = false;
