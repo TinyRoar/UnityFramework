@@ -6,6 +6,9 @@ using UnityEngine;
 public class MoveCam : CamMovement
 {
     [SerializeField]
+    private float DontReactTop = 0.9f;
+
+    [SerializeField]
     private bool YisZ = true;
     [SerializeField]
     private Vector2 Speed = new Vector2(1, 1);
@@ -62,6 +65,9 @@ public class MoveCam : CamMovement
             return;
 
         if (!gameObject.activeInHierarchy)
+            return;
+
+        if (_cameraComponent.ScreenToViewportPoint(Input.mousePosition).y >= DontReactTop)
             return;
 
         if (NewMovement)
