@@ -121,7 +121,7 @@ namespace TinyRoar.Framework
                     break;
             }
 
-            if(InitManager.Instance != null && InitManager.Instance.Debug)
+            if(InitManager.Instance != null && InitManager.StaticDebug)
                 Debug.LogWarning("Save " + Management);
 
         }
