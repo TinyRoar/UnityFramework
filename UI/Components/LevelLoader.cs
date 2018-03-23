@@ -10,7 +10,12 @@ namespace TinyRoar.Framework
 {
     public class LevelLoader : MonoBehaviour
     {
+
+
         [SerializeField] private List<GameObject> LoadingBarList;
+
+        [SerializeField] private List<GameObject> DestroyGameObjects;
+
         [SerializeField] private int LevelIndex = 1;
         private AsyncOperation async;
 
@@ -19,7 +24,7 @@ namespace TinyRoar.Framework
 #if UNITY_5_2 || UNITY_5_1 || UNITY_5_0
             async = Application.LoadLevelAsync(LevelIndex);
         #else
-            async = SceneManager.LoadSceneAsync(LevelIndex);
+            async = SceneManager.LoadSceneAsync(LevelIndex, LoadSceneMode.Additive);
 #endif
 
             StartCoroutine(LevelCoroutine());
@@ -28,9 +33,6 @@ namespace TinyRoar.Framework
 
         IEnumerator LevelCoroutine()
         {
-            // Security
-            yield return 0;
-
             float progress = 0;
 
             while (!async.isDone)
@@ -45,6 +47,11 @@ namespace TinyRoar.Framework
                 progress += 0.1f;
 
             UpdateUI(progress);
+
+            foreach (var go in DestroyGameObjects)
+            {
+                Destroy(go);
+            }
 
             yield return null;
         }
