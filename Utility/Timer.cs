@@ -59,6 +59,12 @@ namespace TinyRoar.Framework
             }
             time /= Time.timeScale;
 
+            if (time == Mathf.Infinity)
+            {
+                endEvent();
+                return -1;
+            }
+
             // insert into list
             this._endTimer.Add(nextTimerId, endEvent);
 
