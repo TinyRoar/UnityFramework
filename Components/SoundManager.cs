@@ -98,6 +98,12 @@ namespace TinyRoar.Framework
 
             var audioClip = GetAudioClip(name);
 
+            if (audioClip == null)
+            {
+                Debug.LogError("Warning! Problem playing sound " + name);
+                return new AudioSource();
+            }
+
             return Play(audioClip, volume, 1f, loop, delay, deleteAfterSec);
         }
 
