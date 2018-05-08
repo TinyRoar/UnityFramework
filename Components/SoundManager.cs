@@ -149,7 +149,7 @@ namespace TinyRoar.Framework
             return fallBackVolume;
         }
 
-        private AudioClip GetAudioClip(string name)
+        public AudioClip GetAudioClip(string name)
         {
             for (var i = 0; i < AudioList.Count; i++)
             {
