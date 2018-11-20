@@ -42,7 +42,19 @@ namespace TinyRoar.Framework
             View = transform.transform.parent.GetComponent<View>();
         }
 
-        public static Layer StringToLayer(string layerName)
+    internal T GetView<T>() where T : class
+    {
+      try
+      {
+        return View as T;
+      }
+      catch (InvalidCastException)
+      {
+        return default(T);
+      }
+    }
+
+    public static Layer StringToLayer(string layerName)
         {
             try
             {
